@@ -8,34 +8,45 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <div>
-          <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <ul className="navbar-nav mr-auto">
+        <React.Fragment>
+          <nav className="navbar navbar-expand-lg bg-primary">
+            <ul className="navbar-nav mr-auto mt-2">
               <li>
-                <Link to={"/"} className="nav-link">
+                <Link
+                  to={"/"}
+                  className="nav-link text-white border border-white rounded"
+                >
                   {" "}
                   Home{" "}
                 </Link>
               </li>
-              <li>
-                <Link to={"/Accedi"} className="nav-link">
+            </ul>
+            <ul className="navbar-nav ml-auto list-group-horizontal">
+              <li className="mr-4 color">
+                <Link
+                  to={"/Accedi"}
+                  className="nav-link text-white border border-white rounded"
+                >
                   Accedi
                 </Link>
               </li>
               <li>
-                <Link to={"/Registrati"} className="nav-link">
+                <Link
+                  to={"/Registrati"}
+                  className="nav-link text-white border border-white rounded"
+                >
                   Registrati
                 </Link>
               </li>
             </ul>
           </nav>
-          <hr />
+          <hr className="bg-white mt-2" />
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/Accedi" component={Accedi} />
             <Route path="/Registrati" component={Registrati} />
           </Switch>
-        </div>
+        </React.Fragment>
       </Router>
     </div>
   );

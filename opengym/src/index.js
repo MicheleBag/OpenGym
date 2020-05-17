@@ -5,7 +5,6 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import "bootstrap/dist/css/bootstrap.css";
-import SearchBar from "./components/searchBar";
 
 ReactDOM.render(
   <BrowserRouter>
