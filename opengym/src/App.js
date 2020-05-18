@@ -4,6 +4,7 @@ import Home from "./components/home";
 import Registrati from "./components/registrati";
 import Accedi from "./components/accedi";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import Risultati from "./components/risultati";
 function App() {
   return (
     <div className="App">
@@ -45,6 +46,7 @@ function App() {
             <Route exact path="/" component={Home} />
             <Route path="/Accedi" component={Accedi} />
             <Route path="/Registrati" component={Registrati} />
+            <Route path="/Risultati" component={Risultati} />
           </Switch>
         </React.Fragment>
       </Router>

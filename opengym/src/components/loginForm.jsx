@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router";
 
 class LoginForm extends Component {
   formStyle = {
@@ -14,6 +15,7 @@ class LoginForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      submitted: false, //used to redirect when submitting
       formData: {
         email: {
           value: "",
@@ -31,6 +33,7 @@ class LoginForm extends Component {
   }
 
   handleChange(event) {
+    //Handle different input field using different names
     const name = event.target.name;
     const value = event.target.value;
     this.setState({
@@ -44,7 +47,9 @@ class LoginForm extends Component {
     });
   }
 
-  handleSubmit(event) {}
+  handleSubmit(event) {
+    this.setState({ submitted: true });
+  }
 
   render() {
     return (
@@ -77,7 +82,7 @@ class LoginForm extends Component {
               class="form-control"
               name="password"
               required="required"
-              pattern=".{8,}"
+              //pattern=".{8,}"
               placeholder={this.state.formData.password.placeholder}
               value={this.state.formData.password.value}
               onChange={this.handleChange}
@@ -89,6 +94,8 @@ class LoginForm extends Component {
             value="Accedi"
           />
         </form>
+
+        {this.state.submitted && <Redirect to={"./"} />}
       </React.Fragment>
     );
   }

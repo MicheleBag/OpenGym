@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router";
 
 class SearchBar extends Component {
   formStyle = {
@@ -10,11 +11,32 @@ class SearchBar extends Component {
   textStyle = {
     fontSize: 60,
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: "",
+      placeholder: "Es. McFit Gym",
+      submitted: false, //used to redirect when submitting
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({ value: event.target.value });
+  }
+
+  handleSubmit(event) {
+    this.setState({ submitted: true });
+  }
+
   render() {
     return (
       <React.Fragment>
         <div>
-          <form style={this.formStyle}>
+          <form style={this.formStyle} onSubmit={this.handleSubmit}>
             <label style={this.textStyle} className="text-white">
               Cerca la tua palestra
             </label>
@@ -24,7 +46,9 @@ class SearchBar extends Component {
               type="text"
               name="gymName"
               id="gymName"
-              placeholder="Es. 'McFit Gym'"
+              value={this.state.value}
+              placeholder={this.state.placeholder}
+              onChange={this.handleChange}
             />
             <input
               className="btn btn-primary btn-lg mt-2 text-white border border-white"
@@ -32,6 +56,7 @@ class SearchBar extends Component {
               value="Cerca"
             />
           </form>
+          {this.state.submitted && <Redirect to={"/Risultati"} />}
         </div>
       </React.Fragment>
     );
