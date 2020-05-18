@@ -10,12 +10,49 @@ class LoginForm extends Component {
   textStyle = {
     fontSize: 30,
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      formData: {
+        email: {
+          value: "",
+          placeholder: "Inserisci la tua email",
+        },
+        password: {
+          value: "",
+          placeholder: "Password",
+        },
+      },
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    const name = event.target.name;
+    const value = event.target.value;
+    this.setState({
+      formData: {
+        ...this.state.formData,
+        [name]: {
+          ...this.state.formData[name],
+          value,
+        },
+      },
+    });
+  }
+
+  handleSubmit(event) {}
+
   render() {
     return (
       <React.Fragment>
         <form
           style={this.formStyle}
           className="border border-white rounded p-4"
+          onSubmit={this.handleSubmit}
         >
           <div class="form-group">
             <label style={this.textStyle} className="text-white">
@@ -24,8 +61,11 @@ class LoginForm extends Component {
             <input
               type="email"
               class="form-control"
-              id="email"
-              placeholder="Inserisci la tua email"
+              name="email"
+              required="required"
+              placeholder={this.state.formData.email.placeholder}
+              value={this.state.formData.email.value}
+              onChange={this.handleChange}
             />
           </div>
           <div class="form-group">
@@ -35,8 +75,12 @@ class LoginForm extends Component {
             <input
               type="password"
               class="form-control"
-              id="password"
-              placeholder="Password"
+              name="password"
+              required="required"
+              pattern=".{8,}"
+              placeholder={this.state.formData.password.placeholder}
+              value={this.state.formData.password.value}
+              onChange={this.handleChange}
             />
           </div>
           <input
