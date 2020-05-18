@@ -4,9 +4,9 @@ import SearchBar from "./searchBar";
 class Home extends Component {
   render() {
     return (
-      <div className="bg-primary">
+      <React.Fragment>
         <SearchBar></SearchBar>
-      </div>
+      </React.Fragment>
     );
   }
 }

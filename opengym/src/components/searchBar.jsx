@@ -8,24 +8,26 @@ class SearchBar extends Component {
     transform: "translate(-50%, -50%)",
   };
   textStyle = {
-    fontSize: 52,
+    fontSize: 60,
   };
   render() {
     return (
       <React.Fragment>
-        <div className="bg-primary">
-          <form style={this.formStyle} className="bg-primary">
+        <div>
+          <form style={this.formStyle}>
             <label style={this.textStyle} className="text-white">
               Cerca la tua palestra
             </label>
+            <hr className="bg-white mt-1" />
             <input
-              className="form-control mb-2 mr-sm-2"
+              className="form-control form-control-lg mb-2 mr-sm-2"
               type="text"
               name="gymName"
-              defaultValue="Es. 'McFit Gym'"
+              id="gymName"
+              placeholder="Es. 'McFit Gym'"
             />
             <input
-              className="btn btn-primary mt-2 text-white border border-white"
+              className="btn btn-primary btn-lg mt-2 text-white border border-white"
               type="submit"
               value="Cerca"
             />

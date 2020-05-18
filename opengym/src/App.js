@@ -14,10 +14,10 @@ function App() {
               <li>
                 <Link
                   to={"/"}
-                  className="nav-link text-white border border-white rounded"
+                  className="nav-link btn btn-warning text-black border-dark"
                 >
                   {" "}
-                  Home{" "}
+                  <b>Home</b>{" "}
                 </Link>
               </li>
             </ul>
@@ -25,7 +25,7 @@ function App() {
               <li className="mr-4 color">
                 <Link
                   to={"/Accedi"}
-                  className="nav-link text-white border border-white rounded"
+                  className="nav-link btn btn-primary text-white border-white"
                 >
                   Accedi
                 </Link>
@@ -33,7 +33,7 @@ function App() {
               <li>
                 <Link
                   to={"/Registrati"}
-                  className="nav-link text-white border border-white rounded"
+                  className="nav-link btn btn-primary text-white border-white"
                 >
                   Registrati
                 </Link>

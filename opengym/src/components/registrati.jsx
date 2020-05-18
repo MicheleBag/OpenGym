@@ -1,11 +1,12 @@
 import React, { Component } from "react";
+import RegisterForm from "./registerForm";
 
 class Registrati extends Component {
   render() {
     return (
-      <div>
-        <h2>Registrati</h2>
-      </div>
+      <React.Fragment>
+        <RegisterForm />
+      </React.Fragment>
     );
   }
 }
