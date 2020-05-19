@@ -41,10 +41,8 @@ class LoginForm extends Component {
     login(user)
       .then((res) => {
         if (res) {
-          console.log(res);
-          if (res === "autenticato") this.setState({ submitted: true });
-          else this.setState({ errorMsg: "Errore: credenziali errate" });
-        }
+          this.setState({ submitted: true });
+        } else this.setState({ errorMsg: "Errore: credenziali errate" });
       })
       .catch((err) => {
         this.setState({ errorMsg: "Errore: server non risponde" });

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Redirect } from "react-router";
 import { register } from "./userFunctions";
 
 class RegisterForm extends Component {

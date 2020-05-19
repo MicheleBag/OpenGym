@@ -1,4 +1,5 @@
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 export const register = (newUser) => {
   return axios
@@ -24,8 +25,10 @@ export const login = (user) => {
     })
     .then((response) => {
       console.log(response);
+      var data = jwt_decode(response.data.token);
+      console.log(data);
       localStorage.setItem("usertoken", response.data);
-      return response.data;
+      return response.data.auth;
     })
     .catch((err) => {
       console.log(err);
