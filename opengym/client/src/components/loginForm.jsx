@@ -18,7 +18,7 @@ class LoginForm extends Component {
       submitted: false, //used to redirect when submitting
       email: "",
       password: "",
-      redirectPath: "./",
+      redirectPath: "./profilo",
     };
 
     this.handleChange = this.handleChange.bind(this);

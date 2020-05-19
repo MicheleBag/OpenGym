@@ -16,11 +16,12 @@ class RegisterForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      submitted: false, //used to redirect when submitting
       name: "",
       surname: "",
       email: "",
       password: "",
+      submitted: false, //used to redirect when submitting
+      registered: "invisible",
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -43,9 +44,8 @@ class RegisterForm extends Component {
     };
 
     register(newUser).then((res) => {
-      //this.setState({ submitted: true });
+      this.setState({ registered: "visible" });
       console.log(res);
-      this.props.history.push(`/`);
     });
   }
 
@@ -121,9 +121,15 @@ class RegisterForm extends Component {
             type="submit"
             value="Registrati"
           />
+          <p
+            //style={this.textStyle}
+            className={
+              this.state.registered + " text-white font-weight-bold mt-1 mb-0"
+            }
+          >
+            Registrazione effettuata
+          </p>
         </form>
-
-        {this.state.submitted && <Redirect to={"/Accedi"} />}
       </React.Fragment>
     );
   }
