@@ -1,6 +1,6 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-
+import App from "../App";
 export const register = (newUser) => {
   return axios
     .post("/registrati", {
@@ -24,13 +24,15 @@ export const login = (user) => {
       password: user.password,
     })
     .then((response) => {
-      console.log(response);
-      var data = jwt_decode(response.data.token);
-      console.log(data);
-      localStorage.setItem("usertoken", response.data);
+      //console.log(response);
+      localStorage.setItem("usertoken", response.data.token);
       return response.data.auth;
     })
     .catch((err) => {
       console.log(err);
     });
+};
+
+export const checkState = () => {
+  return localStorage.usertoken ? true : false;
 };
