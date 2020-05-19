@@ -88,11 +88,22 @@ app.post("/prenotazione", (req, res) => {
   mysqlConnection.query(
     "INSERT INTO prenotazione SET ?",
     prenotazione,
-    (err, result) => {
+    (err, results) => {
       if (!err) res.send("Prenotazione inserita");
       else res.send("Non puoi prenotarti piu di una volta al giorno");
     }
   );
 });
 
-app.post;
+app.post("/search", (req, res) => {
+  let word = "'"+req.body.word+"?'";
+    mysqlConnection.query(
+      "SELECT id_palestra,nome,indirizzo,immagine FROM palestra WHERE nome REGEXP "+word,
+      
+      (err, results) => {
+        searched_names = JSON.stringify(results);
+        res.send(searched_names);
+      }
+    );
+   
+});
