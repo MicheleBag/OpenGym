@@ -2,6 +2,7 @@ const mysql = require("mysql");
 const express = require("express");
 var app = express();
 const bodyparser = require("body-parser");
+const jwt = require('jsonwebtoken');
 
 app.use(bodyparser.json());
 var mysqlConnection = mysql.createConnection({
@@ -53,8 +54,10 @@ app.post("/login", (req, res) => {
       [email, password],
       (err, results, fields) => {
         if (results.length > 0) {
-          res.send("autenticato");
-        } else {
+           const token = jwt.sign({email: results[0].email, nome: results[0].nome, cognome: results[0].cognome},'SEGRETO',{expiresIn: 120 });
+           res.send({auth: true, token: token})
+         } 
+         else {
           res.send("email e/o passowrd sbagliata");
         }
         res.end();
@@ -84,3 +87,5 @@ app.post("/prenotazione", (req, res) => {
     }
   );
 });
+
+app.post
