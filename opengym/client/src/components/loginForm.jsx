@@ -19,6 +19,7 @@ class LoginForm extends Component {
       email: "",
       password: "",
       redirectPath: "./profilo",
+      errorMsg: "",
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -37,13 +38,17 @@ class LoginForm extends Component {
       password: this.state.password,
     };
 
-    login(user).then((res) => {
-      if (res) {
-        console.log(res);
-        //this.props.history.push(`/`);
-        if (res === "autenticato") this.setState({ submitted: true });
-      }
-    });
+    login(user)
+      .then((res) => {
+        if (res) {
+          console.log(res);
+          if (res === "autenticato") this.setState({ submitted: true });
+          else this.setState({ errorMsg: "Errore: credenziali errate" });
+        }
+      })
+      .catch((err) => {
+        this.setState({ errorMsg: "Errore: server non risponde" });
+      });
   }
 
   render() {
@@ -88,6 +93,9 @@ class LoginForm extends Component {
             type="submit"
             value="Accedi"
           />
+          <p className={" text-warning font-weight-bold mt-1 mb-0"}>
+            {this.state.errorMsg}
+          </p>
         </form>
 
         {this.state.submitted && <Redirect to={this.state.redirectPath} />}

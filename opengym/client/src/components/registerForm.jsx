@@ -21,7 +21,7 @@ class RegisterForm extends Component {
       email: "",
       password: "",
       submitted: false, //used to redirect when submitting
-      registered: "invisible",
+      msg: "",
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -44,8 +44,7 @@ class RegisterForm extends Component {
     };
 
     register(newUser).then((res) => {
-      this.setState({ registered: "visible" });
-      console.log(res);
+      this.setState({ msg: "Registrazione effettuata" });
     });
   }
 
@@ -121,13 +120,8 @@ class RegisterForm extends Component {
             type="submit"
             value="Registrati"
           />
-          <p
-            //style={this.textStyle}
-            className={
-              this.state.registered + " text-white font-weight-bold mt-1 mb-0"
-            }
-          >
-            Registrazione effettuata
+          <p className={" text-white font-weight-bold mt-1 mb-0"}>
+            {this.state.msg}
           </p>
         </form>
       </React.Fragment>
