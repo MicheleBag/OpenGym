@@ -43,7 +43,7 @@ class Accedi extends Component {
         if (res) {
           this.setState({ submitted: false });
           localStorage.setItem("loginDone", true);
-          this.props.history.push("/profilo/" + true);
+          this.props.history.push("/profilo");
         } else this.setState({ errorMsg: "Errore: credenziali errate" });
       })
       .catch((err) => {

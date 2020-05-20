@@ -48,7 +48,7 @@ class NavBar extends Component {
       <ul className="navbar-nav ml-auto list-group-horizontal">
         <li className="mr-4 color">
           <Link
-            to={"Profilo"}
+            to={"/Profilo"}
             className="nav-link btn btn-primary text-white border-white"
           >
             Profilo

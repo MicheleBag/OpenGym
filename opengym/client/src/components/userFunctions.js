@@ -34,3 +34,17 @@ export const login = (user) => {
 export const checkState = () => {
   return localStorage.usertoken ? true : false;
 };
+
+export const getGymList = (gymName) => {
+  return axios
+    .post("/search", {
+      word: gymName,
+    })
+    .then((response) => {
+      //console.log(response);
+      return response.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
