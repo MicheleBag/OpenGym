@@ -8,6 +8,7 @@ export const register = (newUser) => {
       password: newUser.password,
     })
     .then((response) => {
+      return response.data;
       console.log("Registered");
     })
     .catch((err) => {
@@ -42,6 +43,24 @@ export const getGymList = (gymName) => {
     })
     .then((response) => {
       //console.log(response);
+      return response.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const edit = (data) => {
+  return axios
+    .post("/registrati", {
+      name: data.name,
+      surname: data.surname,
+      email: data.email,
+      newPassword: data.newPassword,
+      currentPassword: data.currentPassword,
+    })
+    .then((response) => {
+      console.log(response);
       return response.data;
     })
     .catch((err) => {

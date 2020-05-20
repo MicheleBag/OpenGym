@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import jsonwebtoken from "jsonwebtoken";
+import { edit } from "./userFunctions";
 
 class Profilo extends Component {
   constructor(props) {
@@ -13,6 +14,7 @@ class Profilo extends Component {
       email: data.email,
       newPassword: "",
       currentPassword: "",
+      msg: "",
     };
 
     this.changeState = this.changeState.bind(this);
@@ -32,7 +34,7 @@ class Profilo extends Component {
   }
 
   changeState(e) {
-    this.setState({ editMode: true });
+    this.setState({ editMode: !this.state.editMode });
   }
 
   handleChange(event) {
@@ -40,7 +42,21 @@ class Profilo extends Component {
   }
 
   handleSubmit(event) {
-    //modifica dati
+    event.preventDefault();
+
+    const data = {
+      name: this.state.name,
+      surname: this.state.surname,
+      email: this.state.email,
+      newPassword: this.state.newPassword,
+      currentPassword: this.state.currentPassword,
+    };
+
+    edit(data).then((res) => {
+      //DA FARE IL CONTROLLO SU COSA RISPONDE IL SERVER
+      if (res) this.setState({ msg: "Modifiche effettuate" });
+      else this.setState({ msg: "Errore: Password errata" });
+    });
   }
 
   render() {
@@ -153,11 +169,20 @@ class Profilo extends Component {
                   onChange={this.handleChange}
                 />
               </div>
-              <input
-                className="btn btn-warning btn-lg mt-2  border border-dark"
-                type="submit"
-                value="Registrati"
-              />
+              <div class="form-group form-inline">
+                <a
+                  href=""
+                  onClick={this.changeState}
+                  className="nav-link mr-3 col-sm-5"
+                >
+                  Annulla
+                </a>
+                <input
+                  className="btn btn-warning btn-lg mt-2 col-sm-5 border border-dark"
+                  type="submit"
+                  value="Modifica"
+                />
+              </div>
               <p className={"  font-weight-bold mt-1 mb-0"}>{this.state.msg}</p>
             </form>
           </form>
