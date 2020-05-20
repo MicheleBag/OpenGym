@@ -1,6 +1,4 @@
 import axios from "axios";
-import jwt_decode from "jwt-decode";
-import App from "../App";
 export const register = (newUser) => {
   return axios
     .post("/registrati", {

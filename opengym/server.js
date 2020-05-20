@@ -96,14 +96,14 @@ app.post("/prenotazione", (req, res) => {
 });
 
 app.post("/search", (req, res) => {
-  let word = "'"+req.body.word+"?'";
-    mysqlConnection.query(
-      "SELECT id_palestra,nome,indirizzo,immagine FROM palestra WHERE nome REGEXP "+word,
-      
-      (err, results) => {
-        searched_names = JSON.stringify(results);
-        res.send(searched_names);
-      }
-    );
-   
+  let word = "'" + req.body.word + "?'";
+  mysqlConnection.query(
+    "SELECT id_palestra,nome,indirizzo,immagine FROM palestra WHERE nome REGEXP " +
+      word,
+
+    (err, results) => {
+      searched_names = JSON.stringify(results);
+      res.send(searched_names);
+    }
+  );
 });

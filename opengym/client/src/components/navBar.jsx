@@ -27,7 +27,7 @@ class NavBar extends Component {
       <ul className="navbar-nav ml-auto list-group-horizontal">
         <li className="mr-4 color">
           <Link
-            to={"Accedi"}
+            to={"/Accedi"}
             className="nav-link btn btn-primary text-white border-white"
           >
             Accedi
@@ -87,7 +87,7 @@ class NavBar extends Component {
             <Route exact path="/" component={Home} />
             <Route path="/accedi" component={Accedi} />
             <Route path="/registrati" component={Registrati} />
-            <Route path="/risultati" component={Risultati} />
+            <Route path="/risultati/:gymName" component={Risultati} />
             <Route path="/profilo" component={Profilo} />
           </Switch>
         </React.Fragment>

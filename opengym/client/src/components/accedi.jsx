@@ -43,7 +43,7 @@ class Accedi extends Component {
         if (res) {
           this.setState({ submitted: false });
           localStorage.setItem("loginDone", true);
-          this.props.history.push("/profilo");
+          this.props.history.push("/profilo/" + true);
         } else this.setState({ errorMsg: "Errore: credenziali errate" });
       })
       .catch((err) => {
@@ -60,13 +60,13 @@ class Accedi extends Component {
           className="border border-white rounded p-4"
           onSubmit={this.handleSubmit}
         >
-          <div class="form-group">
+          <div className="form-group">
             <label style={this.textStyle} className="text-white">
               Indirizzo Email
             </label>
             <input
               type="email"
-              class="form-control"
+              className="form-control"
               name="email"
               required="required"
               placeholder="Inserisci la tua email"
@@ -74,13 +74,13 @@ class Accedi extends Component {
               onChange={this.handleChange}
             />
           </div>
-          <div class="form-group">
+          <div className="form-group">
             <label style={this.textStyle} className="text-white">
               Password
             </label>
             <input
               type="password"
-              class="form-control"
+              className="form-control"
               name="password"
               required="required"
               //pattern=".{8,}"

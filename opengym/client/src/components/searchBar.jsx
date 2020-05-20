@@ -15,8 +15,7 @@ class SearchBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: "",
-      placeholder: "Es. McFit Gym",
+      gymName: "",
       submitted: false, //used to redirect when submitting
     };
 
@@ -25,10 +24,14 @@ class SearchBar extends Component {
   }
 
   handleChange(event) {
-    this.setState({ value: event.target.value });
+    this.setState({ [event.target.name]: event.target.value });
   }
 
   handleSubmit(event) {
+    const gym = this.state.gymName;
+    //this.props.history.push("/profilo");
+    //state: { detail: gym },
+    //});
     this.setState({ submitted: true });
   }
 
@@ -47,7 +50,7 @@ class SearchBar extends Component {
               name="gymName"
               id="gymName"
               value={this.state.value}
-              placeholder={this.state.placeholder}
+              placeholder="Es. McFit Gym"
               onChange={this.handleChange}
             />
             <input
@@ -56,7 +59,9 @@ class SearchBar extends Component {
               value="Cerca"
             />
           </form>
-          {this.state.submitted && <Redirect to={"/Risultati"} />}
+          {this.state.submitted && (
+            <Redirect to={"/Risultati/" + this.state.gymName} />
+          )}
         </div>
       </React.Fragment>
     );

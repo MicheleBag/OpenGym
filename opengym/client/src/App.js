@@ -1,7 +1,5 @@
 import React from "react";
 import "./App.css";
-
-import { checkState } from "./components/userFunctions";
 import NavBar from "./components/navBar";
 
 class App extends React.Component {
