@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mag 19, 2020 alle 21:03
+-- Creato il: Mag 21, 2020 alle 20:58
 -- Versione del server: 10.4.11-MariaDB
 -- Versione PHP: 7.2.30
 
@@ -29,16 +29,16 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `chiusura` (
   `id_palestra` int(11) NOT NULL,
-  `data` date NOT NULL
+  `days_off` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `chiusura`
 --
 
-INSERT INTO `chiusura` (`id_palestra`, `data`) VALUES
-(8, '2020-05-19'),
-(8, '2020-05-20');
+INSERT INTO `chiusura` (`id_palestra`, `days_off`) VALUES
+(9, 0),
+(9, 1);
 
 -- --------------------------------------------------------
 
@@ -69,7 +69,9 @@ INSERT INTO `palestra` (`id_palestra`, `nome`, `indirizzo`, `immagine`, `capacit
 (5, 'eralssddo@gmail.com', 'aldaadssaaddo', '', 20, '12:00:00', '00:00:00', 2),
 (6, 'eralssddo@gmail.com', 'aldaadssaaddo', '', 20, '12:00:00', '00:00:00', 2),
 (7, 'eralssddo@gmail.com', 'aldaadssaaddo', '', 20, '12:00:00', '00:00:00', 2),
-(8, 'spoleto fitness palestra', 'via tito sinibaldi 18', NULL, 30, '24:00:37', '30:00:37', 2);
+(8, 'spoleto fitness palestra', 'via tito sinibaldi 18', NULL, 30, '24:00:37', '30:00:37', 2),
+(9, 'terni fit', 'via giacomo reggiani', NULL, 39, '09:25:00', '20:10:00', 0),
+(10, 'palest', 'spoleto', NULL, 34, '09:59:00', '20:10:00', 3);
 
 -- --------------------------------------------------------
 
@@ -80,7 +82,7 @@ INSERT INTO `palestra` (`id_palestra`, `nome`, `indirizzo`, `immagine`, `capacit
 CREATE TABLE `prenotazione` (
   `id_palestra` int(11) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `data` date NOT NULL,
+  `data` datetime NOT NULL,
   `orario_inizio` time NOT NULL,
   `orario_fine` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -90,9 +92,10 @@ CREATE TABLE `prenotazione` (
 --
 
 INSERT INTO `prenotazione` (`id_palestra`, `email`, `data`, `orario_inizio`, `orario_fine`) VALUES
-(8, 'eraldo@gmail.com', '2020-05-19', '09:59:51', '20:59:51'),
-(8, 'michele@gmail.com', '2020-05-19', '12:00:38', '24:00:38'),
-(8, 'michele@gmail.com', '2020-05-20', '09:01:16', '16:01:16');
+(9, 'aldo22@nonso.com', '2020-05-24 00:00:00', '09:07:27', '21:07:27'),
+(9, 'aldo@nonso.com', '2020-05-23 15:17:08', '09:25:00', '10:25:00'),
+(9, 'aldtre3o22@nrerronso.com', '2020-05-23 00:00:00', '13:07:59', '18:09:34'),
+(9, 'michele@gmail.com', '2020-05-23 00:00:00', '09:25:00', '10:25:00');
 
 -- --------------------------------------------------------
 
@@ -127,7 +130,7 @@ INSERT INTO `utente` (`email`, `nome`, `cognome`, `password`) VALUES
 -- Indici per le tabelle `chiusura`
 --
 ALTER TABLE `chiusura`
-  ADD PRIMARY KEY (`id_palestra`,`data`),
+  ADD PRIMARY KEY (`id_palestra`,`days_off`),
   ADD KEY `id_palestra` (`id_palestra`);
 
 --
@@ -158,7 +161,7 @@ ALTER TABLE `utente`
 -- AUTO_INCREMENT per la tabella `palestra`
 --
 ALTER TABLE `palestra`
-  MODIFY `id_palestra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_palestra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Limiti per le tabelle scaricate
