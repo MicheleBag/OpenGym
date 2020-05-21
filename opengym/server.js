@@ -127,7 +127,7 @@ app.post("/reservationInfo", (req, res) => {
     (err, results) => {
       business_hours = JSON.parse(JSON.stringify(results));
       open_hours = business_hours[0].orario_apertura;
-      closed_hours = business_hours[0].orario_chiusura;
+      closed_hours = business_hours[0].orario_chiusura;      
       split_open = open_hours.split(':');
       split_closed = closed_hours.split(":");
       total_time_open = (split_open[0] * 60 * 60) + (split_open[1] * 60) + (split_open[2]);
@@ -146,19 +146,19 @@ app.post("/reservationInfo", (req, res) => {
         mysqlConnection.query(
           "SELECT days_off FROM chiusura WHERE id_palestra = ?",[id_palestra],
             (err, resul) => {
-             days_off = JSON.parse(JSON.stringify(resul));
-             let date1= new Date();           
-             date1.setHours(0,0,0,0);             
+             days_off = JSON.parse(JSON.stringify(resul));            
+             let date1= new Date();
+             date1.setHours(0,0,0,0);
              let date2= new Date();
-             date2.setDate(date2.getDate()+7);
              date2.setHours(0,0,0,0);
-             date_tmp = new Date(date1);             
+             date2.setDate(date2.getDate()+7);
+             date_tmp = new Date(date1);            
               mysqlConnection.query(
                 "SELECT data,orario_inizio,orario_fine FROM prenotazione WHERE id_palestra = ? AND data >= ? AND data <= ?",[id_palestra,date1,date2],
                   (err, resul) => {
                     reservation = JSON.parse(JSON.stringify(resul));
                     days_data = {day0:[],day1:[],day2:[],day3:[],day4:[],day5:[],day6:[]};
-                    res_data = {day0:[],day1:[],day2:[],day3:[],day4:[],day5:[],day6:[]};
+                    res_data = {day0:[],day1:[],day2:[],day3:[],day4:[],day5:[],day6:[]};                                      
                     for(i=0; i<7; i++){
                       d = "day"+i;
                       for(var k = 0; k < reservation.length; k++) {
@@ -169,7 +169,7 @@ app.post("/reservationInfo", (req, res) => {
                         }
                       } 
                       date1.setDate(date1.getDate()+1);
-                    }
+                    }                
                     for(l=0; l<7;l++){
                       d = "day"+l;
                         for (z = 0; z < time_slots.length; z++) {
@@ -177,14 +177,13 @@ app.post("/reservationInfo", (req, res) => {
                           for (k = 0; k < days_data[d].length; k++) {
                             if (time_slots[z].start_session == days_data[d][k].start_session && time_slots[z].finish_session == days_data[d][k].finish_session) {
                               count_users[z] += 1;
-                            }
-                            
+                            }                            
                           }
                           if (count_users[z] == business_hours[0].capacità)
                               res_data[d].push({ slot: time_slots[z].slot, start_session: time_slots[z].start_session, finish_session: time_slots[z].finish_session, users: "full" });
                           else
-                              res_data[d].push({ slot: time_slots[z].slot, start_session: time_slots[z].start_session, finish_session: time_slots[z].finish_session, users: count_users[z] });
-                          }
+                              res_data[d].push({ slot: time_slots[z].slot, start_session: time_slots[z].start_session, finish_session: time_slots[z].finish_session, users: count_users[z] });                            
+                        }
                       }
                       for(m=0; m<7; m++){
                         d = "day"+m;
@@ -194,26 +193,23 @@ app.post("/reservationInfo", (req, res) => {
                           if(start_day == days_off[n].days_off){
                             status = false;
                           }
-                        }
+                        } 
                         if(status){
-                          res_data[d].push({status_opened: true, date: JSON.stringify(date_tmp) })
-                          console.log(res_data);
+                          res_data[d].push({status_opened: true, date: JSON.stringify(date_tmp)})
                         }
                         else{
                           res_data[d].push({status_opened: false, date: JSON.stringify(date_tmp)})
                           status = true
                         }
-                        date_tmp.setDate(date_tmp.getDate()+1);
-  
+                        date_tmp.setDate(date_tmp.getDate()+1);  
                       }
-                      res.send(res_data)
-                      console.log("f");
-                }     
+                      res.send(res_data);
+                }        
               );
           }
         );
     }
-  );
+  );   
 });
 
 

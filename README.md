@@ -1,9 +1,9 @@
 # OpenGym
 
 TO-DO:
-- [ ] cerca palestra
-- [ ] autenticazione
-- [ ] registrazione
+- [X] cerca palestra
+- [X] autenticazione
+- [X] registrazione
 - [ ] prenotazione
 - [ ] cancellazione
 - [ ] pannello admin (aggiungere e rimuovere palestre)

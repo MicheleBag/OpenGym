@@ -43,7 +43,9 @@ class RegisterForm extends Component {
     };
 
     register(newUser).then((res) => {
-      this.setState({ msg: "Registrazione effettuata" });
+      //DA FARE IL CONTROLLO SU COSA RISPONDE IL SERVER
+      if (res) this.setState({ msg: "Registrazione effettuata" });
+      else this.setState({ msg: "Ops! Qualcosa è andato storto" });
     });
   }
 

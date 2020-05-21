@@ -1,6 +1,4 @@
 import axios from "axios";
-import jwt_decode from "jwt-decode";
-
 export const register = (newUser) => {
   return axios
     .post("/registrati", {
@@ -10,7 +8,7 @@ export const register = (newUser) => {
       password: newUser.password,
     })
     .then((response) => {
-      console.log("Registered");
+      return response.data;
     })
     .catch((err) => {
       console.log(err);
@@ -24,11 +22,45 @@ export const login = (user) => {
       password: user.password,
     })
     .then((response) => {
-      console.log(response);
-      var data = jwt_decode(response.data.token);
-      console.log(data);
-      localStorage.setItem("usertoken", response.data);
+      //console.log(response);
+      localStorage.setItem("usertoken", response.data.token);
       return response.data.auth;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const checkState = () => {
+  return localStorage.usertoken ? true : false;
+};
+
+export const getGymList = (gymName) => {
+  return axios
+    .post("/search", {
+      word: gymName,
+    })
+    .then((response) => {
+      //console.log(response);
+      return response.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const edit = (data) => {
+  return axios
+    .post("/modificaDati", {
+      name: data.name,
+      surname: data.surname,
+      email: data.email,
+      newPassword: data.newPassword,
+      currentPassword: data.currentPassword,
+    })
+    .then((response) => {
+      console.log(response);
+      return response.data;
     })
     .catch((err) => {
       console.log(err);
