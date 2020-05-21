@@ -70,30 +70,20 @@ class NavBar extends Component {
     return (
       <Router>
         <React.Fragment>
-          <Spring
-            from={{ opacity: 0, marginTop: -300 }}
-            to={{ opacity: 1, marginTop: 0 }}
-            config={{ duration: 800 }}
-          >
-            {(props) => (
-              <animated.div style={props}>
-                <nav className="navbar navbar-expand-lg bg-primary">
-                  <ul className="navbar-nav mr-auto mt-2">
-                    <li>
-                      <Link
-                        to={"/"}
-                        className="nav-link btn btn-warning text-black border-dark"
-                      >
-                        <b>Home</b>
-                      </Link>
-                    </li>
-                  </ul>
-                  {this.state.loggedIn ? userLinks : guestLinks}
-                </nav>
-                <hr className="bg-white mt-2" />
-              </animated.div>
-            )}
-          </Spring>
+          <nav className="navbar navbar-expand-lg bg-primary">
+            <ul className="navbar-nav mr-auto mt-2">
+              <li>
+                <Link
+                  to={"/"}
+                  className="nav-link btn btn-warning text-black border-dark"
+                >
+                  <b>Home</b>
+                </Link>
+              </li>
+            </ul>
+            {this.state.loggedIn ? userLinks : guestLinks}
+          </nav>
+          <hr className="bg-white mt-2" />
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/accedi" component={Accedi} />

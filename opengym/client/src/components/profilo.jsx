@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import jsonwebtoken from "jsonwebtoken";
 import { edit } from "./userFunctions";
+import AnimatedText from "./animatedText";
+import { Spring, animated, config } from "react-spring/renderprops";
 
 class Profilo extends Component {
   constructor(props) {
@@ -62,7 +64,7 @@ class Profilo extends Component {
 
   render() {
     const dataCard = (
-      <div className="card w-25 m-5">
+      <div className="card w-25 m-4">
         <h5 className="card-header">I tuoi dati</h5>
         <div className="card-body">
           <ul className="list-group list-group-flush">
@@ -88,9 +90,9 @@ class Profilo extends Component {
     );
 
     const editCard = (
-      <div className="card w-25 m-5">
+      <div className="card w-25 m-4">
         <h5 className="card-header">Modifica i tuoi dati</h5>
-        <div className="card-body">
+        <div className="card-body p-2">
           <form>
             <form
               style={this.formStyle}
@@ -193,8 +195,21 @@ class Profilo extends Component {
     return (
       <React.Fragment>
         {this.checkLogin()}
-        <h1 className="text-white">Bentornato in OpenGym!</h1>
-        {this.state.editMode ? editCard : dataCard}
+        <h1 className="text-white">
+          <AnimatedText text={"Bentornato " + this.state.name} point="!" />
+        </h1>
+        <Spring
+          from={{ opacity: 0, marginLeft: -300 }}
+          to={{ opacity: 1, marginLeft: 0 }}
+          config={config.default}
+        >
+          {(props) => (
+            <animated.div style={props}>
+              {this.state.editMode ? editCard : dataCard}
+            </animated.div>
+          )}
+        </Spring>
+        );
       </React.Fragment>
     );
   }

@@ -14,7 +14,7 @@ class AnimatedText extends Component {
             config={{ duration: 500 }}
           >
             {(item) => (props) => (
-              <p className="mb-1" style={props}>
+              <p className="mb-1 ml-auto" style={props}>
                 {item}
               </p>
             )}
@@ -24,10 +24,10 @@ class AnimatedText extends Component {
             keys={(item) => item.key}
             from={{ opacity: 0, transform: "translate3d(0,-40px,0)" }}
             enter={{ opacity: 1, transform: "translate3d(0,0px,0)" }}
-            config={{ delay: 500 }}
+            config={{ delay: 500, duration: 300 }}
           >
             {(item) => (props) => (
-              <p className="mb-1" style={props}>
+              <p className="mb-1 mr-auto" style={props}>
                 {this.props.point}
               </p>
             )}

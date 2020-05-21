@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router";
-import { Spring, animated, Transition } from "react-spring/renderprops";
 import AnimatedText from "./animatedText";
-
+import { Spring, animated } from "react-spring/renderprops";
 class SearchBar extends Component {
   formStyle = {
     position: "absolute",
@@ -35,41 +34,44 @@ class SearchBar extends Component {
 
   render() {
     return (
-      <Spring
-        from={{ opacity: 0 }}
-        to={{ opacity: 1 }}
-        config={{ duration: 800 }}
-      >
-        {(props) => (
-          <React.Fragment>
-            <animated.div style={props}>
-              <form style={this.formStyle} onSubmit={this.handleSubmit}>
-                <label style={this.textStyle} className="text-white">
-                  <AnimatedText text="Cerca la tua palestra" point="!" />
-                </label>
-                <hr className="bg-white mt-1" />
-                <input
-                  className="form-control form-control-lg mb-2 mr-sm-2"
-                  type="text"
-                  name="gymName"
-                  id="gymName"
-                  value={this.state.value}
-                  placeholder="Es. McFit Gym"
-                  onChange={this.handleChange}
-                />
+      <React.Fragment>
+        <form style={this.formStyle} onSubmit={this.handleSubmit}>
+          <label style={this.textStyle} className="text-white">
+            <AnimatedText text="Cerca la tua palestra" point="!" />
+          </label>
+          <hr className="bg-white mt-1" />
+          <input
+            className="form-control form-control-lg mb-2 mr-sm-2"
+            type="text"
+            name="gymName"
+            id="gymName"
+            value={this.state.value}
+            placeholder="Es. McFit Gym"
+            onChange={this.handleChange}
+          />
+          <Spring
+            from={{
+              opacity: 0,
+              transform: "rotateY(90deg)",
+            }}
+            to={{ opacity: 1, transform: "rotateY(0deg)" }}
+            config={{ delay: 500, duration: 400 }}
+          >
+            {(props) => (
+              <animated.div style={props}>
                 <input
                   className="btn btn-primary btn-lg mt-2 text-white border border-white"
                   type="submit"
                   value="Cerca"
                 />
-              </form>
-              {this.state.submitted && (
-                <Redirect to={"/Risultati/" + this.state.gymName} />
-              )}
-            </animated.div>
-          </React.Fragment>
+              </animated.div>
+            )}
+          </Spring>
+        </form>
+        {this.state.submitted && (
+          <Redirect to={"/Risultati/" + this.state.gymName} />
         )}
-      </Spring>
+      </React.Fragment>
     );
   }
 }

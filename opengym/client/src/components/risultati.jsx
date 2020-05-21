@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { getGymList } from "./userFunctions";
+import { Spring, animated, config } from "react-spring/renderprops";
+import AnimatedText from "./animatedText";
 
 class Risultati extends Component {
   constructor(props) {
@@ -51,27 +53,42 @@ class Risultati extends Component {
     var data = this.fetchData();
     const list = data.map((d) => (
       <div className="col-sm-3">
-        <div className="card m-1">
-          <img
-            className="card-img-top p-2"
-            src="" //{d.immagine} //non funziona
-            alt="gym pic"
-          />
-          <div className="card-body">
-            <h5 className="card-title">{d.nome}</h5>
-            <p className="card-text">{d.indirizzo}</p>
-            <a href="#" className="btn btn-primary">
-              Prenota ora
-            </a>
-          </div>
-        </div>
+        <Spring
+          from={{ opacity: 0 }}
+          to={{ opacity: 1 }}
+          config={(config.molasses, { delay: 200 })}
+        >
+          {(props) => (
+            <React.Fragment>
+              <animated.div style={props}>
+                <div className="card m-1">
+                  <img
+                    className="card-img-top p-2"
+                    src="https://lirp-cdn.multiscreensite.com/7bbdb991/dms3rep/multi/opt/Image00032-83ca7342-640w.JPG" //{d.immagine} non funziona
+                    alt="gym pic"
+                  />
+                  <div className="card-body">
+                    <h5 className="card-title">{d.nome}</h5>
+                    <p className="card-text">{d.indirizzo}</p>
+                    <a href="#" className="btn btn-primary">
+                      Prenota ora
+                    </a>
+                  </div>
+                </div>
+              </animated.div>
+            </React.Fragment>
+          )}
+        </Spring>
       </div>
     ));
 
     return (
       <React.Fragment>
         <h1 className="text-white mb-5 mt-2">
-          Lista risultati per "{this.state.key}"
+          <AnimatedText
+            text={"Lista risultati per: "}
+            point={" '" + this.state.key + "'"}
+          />
         </h1>
         <div className="row m-0">{list}</div>
       </React.Fragment>
