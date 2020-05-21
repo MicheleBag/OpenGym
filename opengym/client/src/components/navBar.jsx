@@ -5,6 +5,7 @@ import Registrati from "./registrati";
 import Accedi from "./accedi";
 import Risultati from "./risultati";
 import Profilo from "./profilo";
+import PrenotazioniGym from "./prenotazioniGym";
 import { checkState } from "./userFunctions";
 import { Spring, animated } from "react-spring/renderprops";
 
@@ -90,6 +91,7 @@ class NavBar extends Component {
             <Route path="/registrati" component={Registrati} />
             <Route path="/risultati/:gymName" component={Risultati} />
             <Route path="/profilo" component={Profilo} />
+            <Route path="/prenotazioni/:gymId" component={PrenotazioniGym} />
           </Switch>
         </React.Fragment>
       </Router>

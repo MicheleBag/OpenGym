@@ -70,7 +70,10 @@ class Risultati extends Component {
                   <div className="card-body">
                     <h5 className="card-title">{d.nome}</h5>
                     <p className="card-text">{d.indirizzo}</p>
-                    <a href="#" className="btn btn-primary">
+                    <a
+                      href={"/prenotazioni/" + d.id_palestra}
+                      className="btn btn-primary"
+                    >
                       Prenota ora
                     </a>
                   </div>
