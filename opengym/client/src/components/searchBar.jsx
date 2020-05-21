@@ -45,6 +45,7 @@ class SearchBar extends Component {
             type="text"
             name="gymName"
             id="gymName"
+            required="required"
             value={this.state.value}
             placeholder="Es. McFit Gym"
             onChange={this.handleChange}
