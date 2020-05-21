@@ -41,7 +41,21 @@ export const getGymList = (gymName) => {
       word: gymName,
     })
     .then((response) => {
-      //console.log(response);
+      console.log(response);
+      return response.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const getGymReservation = (gymId) => {
+  return axios
+    .post("/reservationInfo", {
+      id_palestra: gymId,
+    })
+    .then((response) => {
+      console.log(response);
       return response.data;
     })
     .catch((err) => {
