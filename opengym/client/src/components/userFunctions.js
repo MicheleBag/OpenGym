@@ -9,7 +9,6 @@ export const register = (newUser) => {
     })
     .then((response) => {
       return response.data;
-      console.log("Registered");
     })
     .catch((err) => {
       console.log(err);
@@ -52,7 +51,7 @@ export const getGymList = (gymName) => {
 
 export const edit = (data) => {
   return axios
-    .post("/registrati", {
+    .post("/modificaDati", {
       name: data.name,
       surname: data.surname,
       email: data.email,

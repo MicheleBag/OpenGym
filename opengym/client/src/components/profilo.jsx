@@ -55,29 +55,30 @@ class Profilo extends Component {
     edit(data).then((res) => {
       //DA FARE IL CONTROLLO SU COSA RISPONDE IL SERVER
       if (res) this.setState({ msg: "Modifiche effettuate" });
+      //after 1sec this.setState({editMode: false});
       else this.setState({ msg: "Errore: Password errata" });
     });
   }
 
   render() {
     const dataCard = (
-      <div class="card w-25 m-5">
-        <h5 class="card-header">I tuoi dati</h5>
-        <div class="card-body">
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">
+      <div className="card w-25 m-5">
+        <h5 className="card-header">I tuoi dati</h5>
+        <div className="card-body">
+          <ul className="list-group list-group-flush">
+            <li className="list-group-item">
               <b>Email:</b> {this.state.email}
             </li>
-            <li class="list-group-item">
+            <li className="list-group-item">
               <b>Nome:</b> {this.state.name}
             </li>
-            <li class="list-group-item">
+            <li className="list-group-item">
               <b>Cognome:</b> {this.state.surname}
             </li>
           </ul>
           <button
             type="button"
-            class="btn btn-primary mt-2"
+            className="btn btn-primary mt-2"
             onClick={this.changeState}
           >
             Modifica i tuoi dati
@@ -87,22 +88,22 @@ class Profilo extends Component {
     );
 
     const editCard = (
-      <div class="card w-25 m-5">
-        <h5 class="card-header">Modifica i tuoi dati</h5>
-        <div class="card-body">
+      <div className="card w-25 m-5">
+        <h5 className="card-header">Modifica i tuoi dati</h5>
+        <div className="card-body">
           <form>
             <form
               style={this.formStyle}
               className="border border-white rounded p-3"
               onSubmit={this.handleSubmit}
             >
-              <div class="form-group">
+              <div className="form-group">
                 <label style={this.textStyle} className="">
                   Nome
                 </label>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   required="required"
                   pattern="[A-Za-z ]{1,32}"
                   name="name"
@@ -110,13 +111,13 @@ class Profilo extends Component {
                   onChange={this.handleChange}
                 />
               </div>
-              <div class="form-group">
+              <div className="form-group">
                 <label style={this.textStyle} className="">
                   Cognome
                 </label>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   required="required"
                   pattern="[A-Za-z ]{1,32}"
                   name="surname"
@@ -125,13 +126,13 @@ class Profilo extends Component {
                   onChange={this.handleChange}
                 />
               </div>
-              <div class="form-group">
+              <div className="form-group">
                 <label style={this.textStyle} className="">
                   Indirizzo email
                 </label>
                 <input
                   type="email"
-                  class="form-control"
+                  className="form-control"
                   required="required"
                   name="email"
                   value={this.state.email}
@@ -139,13 +140,13 @@ class Profilo extends Component {
                   onChange={this.handleChange}
                 />
               </div>
-              <div class="form-group">
+              <div className="form-group">
                 <label style={this.textStyle} className="">
                   Nuova password
                 </label>
                 <input
                   type="password"
-                  class="form-control"
+                  className="form-control"
                   required="required"
                   //pattern=".{8,}"
                   name="newPassword"
@@ -154,13 +155,13 @@ class Profilo extends Component {
                   onChange={this.handleChange}
                 />
               </div>
-              <div class="form-group">
+              <div className="form-group">
                 <label style={this.textStyle} className="">
                   Password corrente
                 </label>
                 <input
                   type="password"
-                  class="form-control"
+                  className="form-control"
                   required="required"
                   //pattern=".{8,}"
                   name="currentPassword"
@@ -169,21 +170,20 @@ class Profilo extends Component {
                   onChange={this.handleChange}
                 />
               </div>
-              <div class="form-group form-inline">
-                <a
-                  href=""
+              <div className="form-group form-inline">
+                <button
                   onClick={this.changeState}
-                  className="nav-link mr-3 col-sm-5"
+                  className="btn btn-link mr-3 col-sm-5"
                 >
                   Annulla
-                </a>
+                </button>
                 <input
-                  className="btn btn-warning btn-lg mt-2 col-sm-5 border border-dark"
+                  className="btn btn-warning btn-lg mt-2 px-1 col-sm-5 border border-dark"
                   type="submit"
                   value="Modifica"
-                />
+                ></input>
               </div>
-              <p className={"  font-weight-bold mt-1 mb-0"}>{this.state.msg}</p>
+              <p className={"font-weight-bold mt-1 mb-0"}>{this.state.msg}</p>
             </form>
           </form>
         </div>
@@ -193,7 +193,6 @@ class Profilo extends Component {
     return (
       <React.Fragment>
         {this.checkLogin()}
-        {console.log(this.state.editMode)}
         <h1 className="text-white">Bentornato in OpenGym!</h1>
         {this.state.editMode ? editCard : dataCard}
       </React.Fragment>

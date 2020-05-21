@@ -22,7 +22,7 @@ class Risultati extends Component {
         getGymList(gymName)
           .then((res) => {
             this.setState({ gymList: res });
-            //console.log(this.state.gymList.length);
+            console.log(this.state.gymList);
           })
           .catch((err) => {
             console.log(err);
@@ -43,18 +43,19 @@ class Risultati extends Component {
         immagine: this.state.gymList[k].immagine,
       });
     }
+    console.log(data.immagine);
     return data;
   }
 
   render() {
     var data = this.fetchData();
     const list = data.map((d) => (
-      <div class="col-sm-3">
+      <div className="col-sm-3">
         <div className="card m-1">
           <img
             className="card-img-top p-2"
-            src="https://www.palestraostia.it/content/uploads/2019/02/palestra_01.jpg"
-            alt="Card image cap"
+            src="" //{d.immagine} //non funziona
+            alt="gym pic"
           />
           <div className="card-body">
             <h5 className="card-title">{d.nome}</h5>
@@ -72,7 +73,7 @@ class Risultati extends Component {
         <h1 className="text-white mb-5 mt-2">
           Lista risultati per "{this.state.key}"
         </h1>
-        <div class="row m-0">{list}</div>
+        <div className="row m-0">{list}</div>
       </React.Fragment>
     );
   }
