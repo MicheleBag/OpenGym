@@ -29,7 +29,7 @@ class PrenotazioniGym extends Component {
   }
 
   render() {
-    return <React.Fragment>Ciao</React.Fragment>;
+    return <React.Fragment>Prenotazioni per la palestra</React.Fragment>;
   }
 }
 
