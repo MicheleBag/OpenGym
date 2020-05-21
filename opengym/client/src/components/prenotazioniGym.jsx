@@ -17,7 +17,7 @@ class PrenotazioniGym extends Component {
         getGymReservation(gymId)
           .then((res) => {
             this.setState({ reservationList: res });
-            console.log(this.state.reservationList);
+            //console.log(this.state.reservationList);
           })
           .catch((err) => {
             console.log(err);

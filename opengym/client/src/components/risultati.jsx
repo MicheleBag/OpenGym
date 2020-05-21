@@ -45,7 +45,7 @@ class Risultati extends Component {
         immagine: this.state.gymList[k].immagine,
       });
     }
-    console.log(data.immagine);
+    //console.log(data.immagine);
     return data;
   }
 
