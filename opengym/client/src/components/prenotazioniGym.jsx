@@ -34,8 +34,8 @@ class PrenotazioniGym extends Component {
 
   fetchData = () => {
     var data = [];
-    for (let index = 0; index < 6; index++) {
-      data.push(this.state.reservationList[index]);
+    for (let k = 0; k < 6; k++) {
+      data.push(this.state.reservationList["day" + k]);
     }
     return data;
   };
@@ -51,6 +51,21 @@ class PrenotazioniGym extends Component {
       ));
     };
 
+    const tableRow = () => {
+      var data = this.fetchData();
+      console.log(data);
+
+      var row = [];
+      for (let j = 0; j < 10; j++) {
+        row.push(<tr />);
+        row.push(<td>{data[0][j].start_session}</td>);
+        for (let i = 0; i < 6; i++) {
+          row.push(<td>{data[i][j].remaining_places}</td>);
+        }
+      }
+      return row;
+    };
+
     const pagina = () => {
       return (
         <React.Fragment>
@@ -62,25 +77,7 @@ class PrenotazioniGym extends Component {
                 {tableHead()}
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Larry the Bird</td>
-                <td>@twitter</td>
-              </tr>
-            </tbody>
+            <tbody>{tableRow()}</tbody>
           </table>
         </React.Fragment>
       );
