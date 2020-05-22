@@ -20,26 +20,28 @@ class PrenotazioniGym extends Component {
       email: "",
       msg: "",
     };
-    console.log(this.state);
     this.changeState = this.changeState.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   async componentDidMount() {
+    //check if got gymID and user is logged in
     if (this.props.match.params && localStorage.usertoken) {
       try {
+        //get user data
         const userData = jsonwebtoken.decode(localStorage.usertoken);
         this.setState({ name: userData.nome });
         this.setState({ surname: userData.cognome });
         this.setState({ email: userData.email });
 
+        //get gym reservation info
         const gymId = this.props.match.params.gymId;
         this.setState({ id: gymId });
         getGymReservation(gymId)
           .then((res) => {
             this.setState({ reservationList: res });
             this.setState({ dataReady: true });
-            //console.log(this.state.reservationList);
+            console.log(this.state.reservationList);
           })
           .catch((err) => {
             console.log(err);
@@ -52,6 +54,7 @@ class PrenotazioniGym extends Component {
     }
   }
 
+  //made to use reservation list in a more usable data struct
   fetchData = () => {
     var data = [];
     for (let k = 0; k < 6; k++) {
@@ -60,6 +63,7 @@ class PrenotazioniGym extends Component {
     return data;
   };
 
+  //used to get date and hours when user's click on a btn and change render components
   changeState = (i, j, e) => {
     if (i === false) this.setState({ submitted: false });
     else {
@@ -99,7 +103,7 @@ class PrenotazioniGym extends Component {
   render() {
     const tableHead = () => {
       var data = this.fetchData();
-      //console.log(data);
+      console.log(data);
       return data.map((d) => (
         <React.Fragment>
           <th scope="col" className="p-1">
@@ -271,7 +275,7 @@ class PrenotazioniGym extends Component {
       </div>
     );
 
-    const pagina = () => {
+    const page = () => {
       return (
         <React.Fragment>
           <h1 className="text-white">
@@ -284,11 +288,11 @@ class PrenotazioniGym extends Component {
       );
     };
 
-    const paginaVuota = <h1>dati non pronti</h1>;
+    const emptyPage = <h1>Data loading</h1>;
 
     return (
       <React.Fragment>
-        {this.state.dataReady ? pagina() : paginaVuota}
+        {this.state.dataReady ? page() : emptyPage}
       </React.Fragment>
     );
   }

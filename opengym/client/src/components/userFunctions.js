@@ -8,7 +8,7 @@ export const register = (newUser) => {
       password: newUser.password,
     })
     .then((response) => {
-      return response.data;
+      return response.data.done;
     })
     .catch((err) => {
       console.log(err);
@@ -24,7 +24,7 @@ export const login = (user) => {
     .then((response) => {
       //console.log(response);
       localStorage.setItem("usertoken", response.data.token);
-      return response.data.auth;
+      return response.data.done;
     })
     .catch((err) => {
       console.log(err);
@@ -83,7 +83,7 @@ export const edit = (data) => {
 
 export const reserve = (reserveData) => {
   return axios
-    .post("/registrati", {
+    .post("/prenotazione", {
       id_palestra: reserveData.id,
       email: reserveData.email,
       data: reserveData.date,
@@ -91,7 +91,7 @@ export const reserve = (reserveData) => {
       orario_fine: reserveData.timeEnd,
     })
     .then((response) => {
-      return response.data;
+      return response.data.done;
     })
     .catch((err) => {
       console.log(err);
