@@ -37,10 +37,10 @@ app.post("/registrati", (req, res) => {
     err,
     result
   ) {
-    if (!err) res.send("Utente registrato");
+    if (!err) res.json({done: true});
     else {
       console.log(err);
-      res.send("Utente già registrato");
+      res.json({done: false});
     }
   });
 });
@@ -63,21 +63,20 @@ app.post("/login", (req, res) => {
             "SEGRETO",
             { expiresIn: 120 }
           );
-          res.send({ auth: true, token: token });
+          res.json({ done: true, token: token });
         } else {
-          res.send({ auth: false });
+          res.json({ done: false });
         }
-        res.end();
       }
     );
   } else {
-    res.send("Inserire email e password!");
-    res.end();
+    res.json({done: false});
   }
 });
 
 app.post("/prenotazione", (req, res) => {
   let inp = req.body;
+  let date
   let prenotazione = {
     id_palestra: inp.id_palestra,
     email: inp.email,
@@ -99,13 +98,16 @@ app.post("/search", (req, res) => {
   let word = "'" + req.body.word + "?'";
   mysqlConnection.query(
     "SELECT id_palestra,nome,indirizzo,immagine FROM palestra WHERE nome REGEXP " + word,
-
     (err, results) => {
-      let json_searched_names = JSON.parse(JSON.stringify(results));
-      res.send(json_searched_names);
+      if(!err){
+        let json_searched_names = JSON.parse(JSON.stringify(results));
+        res.json(json_searched_names);
+      }
+      else{
+        res.json({done: false})
+      } 
     }
   );
-
 });
 
 app.post("/reservationInfo", (req, res) => {
@@ -123,31 +125,45 @@ app.post("/reservationInfo", (req, res) => {
   mysqlConnection.query(
     "SELECT orario_apertura,orario_chiusura,capacità,giorni_off FROM palestra WHERE id_palestra = ?", id_palestra,
     (err, results) => {
-      business_hours = JSON.parse(JSON.stringify(results));
-      InsertTimeSlots(business_hours,time_slots);
- 
-        mysqlConnection.query(
-          "SELECT days_off FROM chiusura WHERE id_palestra = ?",[id_palestra],
-            (err, resul) => {
-             days_off = JSON.parse(JSON.stringify(resul));            
-             SetTime0toDates(date1,date2,date_tmp);            
-              mysqlConnection.query(
-                "SELECT data,orario_inizio,orario_fine FROM prenotazione WHERE id_palestra = ? AND data >= ? AND data <= ?",[id_palestra,date1,date2],
-                  (err, resul) => {
-                    reservation = JSON.parse(JSON.stringify(resul));
-                    days_data = {day0:[],day1:[],day2:[],day3:[],day4:[],day5:[],day6:[]};
-                    res_data = {day0:[],day1:[],day2:[],day3:[],day4:[],day5:[],day6:[]};                                      
-                    daysDataInsert(reservation,days_data,date1);    
-                    console.log(res_data);
-                    sessionInsert(time_slots,days_data,res_data,business_hours);
-                    dateStatusInsert(date_tmp,days_off,res_data);  
-                      res.send(res_data);
-                }        
-              );
-          }
-        );
+      if(!err){
+        business_hours = JSON.parse(JSON.stringify(results));
+        InsertTimeSlots(business_hours,time_slots);
+          mysqlConnection.query(
+            "SELECT days_off FROM chiusura WHERE id_palestra = ?",[id_palestra],
+              (err, resul) => {
+                if(!err){
+                  days_off = JSON.parse(JSON.stringify(resul));            
+                  SetTime0toDates(date1,date2,date_tmp);            
+                  mysqlConnection.query(
+                    "SELECT data,orario_inizio,orario_fine FROM prenotazione WHERE id_palestra = ? AND data >= ? AND data <= ?",[id_palestra,date1,date2],
+                      (err, resul) => {
+                      if(!err){  
+                        reservation = JSON.parse(JSON.stringify(resul));
+                        days_data = {day0:[],day1:[],day2:[],day3:[],day4:[],day5:[],day6:[]};
+                        res_data = {day0:[],day1:[],day2:[],day3:[],day4:[],day5:[],day6:[]};                                      
+                        daysDataInsert(reservation,days_data,date1);    
+                        console.log(res_data);
+                        sessionInsert(time_slots,days_data,res_data,business_hours);
+                        dateStatusInsert(date_tmp,days_off,res_data);  
+                        res.json(res_data);
+                      }
+                      else{
+                        res.json({done: false});
+                      }
+                      }        
+                  );
+                }
+                else{
+                  res.json({done: false});
+                }
+              }
+          );
+      }
+      else{
+        res.json({done: false});
+      }  
     }
-  );   
+  ); 
 });
 
 function ChangeDateFormat(date){
