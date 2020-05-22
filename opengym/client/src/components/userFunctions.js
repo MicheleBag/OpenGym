@@ -55,7 +55,7 @@ export const getGymReservation = (gymId) => {
       id_palestra: gymId,
     })
     .then((response) => {
-      console.log(response.data);
+      //console.log(response.data);
       return response.data;
     })
     .catch((err) => {
@@ -74,6 +74,23 @@ export const edit = (data) => {
     })
     .then((response) => {
       console.log(response);
+      return response.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const reserve = (reserveData) => {
+  return axios
+    .post("/registrati", {
+      id_palestra: reserveData.id,
+      email: reserveData.email,
+      data: reserveData.date,
+      orario_inizio: reserveData.timeStart,
+      orario_fine: reserveData.timeEnd,
+    })
+    .then((response) => {
       return response.data;
     })
     .catch((err) => {
