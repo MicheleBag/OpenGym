@@ -179,10 +179,8 @@ app.post("/reservationInfo", (req, res) => {
                               count_users[z] += 1;
                             }                            
                           }
-                          if (count_users[z] == business_hours[0].capacità)
-                              res_data[d].push({ start_session: time_slots[z].start_session, users: "full" });
-                          else
-                              res_data[d].push({  start_session: time_slots[z].start_session,  users: count_users[z] });                            
+                          
+                              res_data[d].push({  start_session: time_slots[z].start_session,  remaining_places: (business_hours[0].capacità - count_users[z]) });                            
                         }
                       }
                       for(m=0; m<7; m++){
@@ -211,9 +209,3 @@ app.post("/reservationInfo", (req, res) => {
     }
   );   
 });
-
-
-
-
-
-
