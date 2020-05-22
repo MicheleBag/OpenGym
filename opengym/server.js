@@ -76,11 +76,11 @@ app.post("/login", (req, res) => {
 
 app.post("/prenotazione", (req, res) => {
   let inp, date, prenotazione;
-
+  console.log(req.body);
   inp = req.body;
-  row_date = new Date(inp.data);
-  date = ChangeDateFormat2(row_date) 
-  console.log(date)
+  row_data = inp.data; 
+  date = ChangeDateFormat2(row_data); 
+  console.log(date);
   prenotazione = {
     id_palestra: inp.id_palestra,
     email: inp.email,
@@ -203,7 +203,10 @@ function ChangeDateFormat(date){
   return day + '-' + month + '-' + year;
 }
 
-function ChangeDateFormat2(date){
+function ChangeDateFormat2(row){
+
+  row_data = row.split("-")
+  date = new Date(row_data[2]+"-"+row_data[1]+"-"+row_data[0])
   var year = date.getFullYear();
 
   var month = (1 + date.getMonth()).toString();
