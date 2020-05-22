@@ -110,97 +110,37 @@ app.post("/search", (req, res) => {
 
 app.post("/reservationInfo", (req, res) => {
   let id_palestra = req.body.id_palestra;
-  
   let business_hours;
-  let open_hours;
-  let closed_hours;
-  let tot_hours;
   let time_slots = [];
-  let count_users = [];
   let reservation;
   let res_data = [];
   let days_off;
   let days_data=[];
+  let date1 = new Date();
+  let date2 = new Date();
+  let date_tmp = new Date(date1);
   
   mysqlConnection.query(
     "SELECT orario_apertura,orario_chiusura,capacità,giorni_off FROM palestra WHERE id_palestra = ?", id_palestra,
     (err, results) => {
       business_hours = JSON.parse(JSON.stringify(results));
-      open_hours = business_hours[0].orario_apertura;
-      closed_hours = business_hours[0].orario_chiusura;      
-      split_open = open_hours.split(':');
-      split_closed = closed_hours.split(":");
-      total_time_open = (split_open[0] * 60 * 60) + (split_open[1] * 60) + (split_open[2]);
-      total_time_closed = (split_closed[0] * 60 * 60) + (split_closed[1] * 60) + (split_closed[2]);
-      tot_hours = parseInt(((total_time_closed - total_time_open) / (60 * 60)) / 100);
-      tmp = open_hours;
-      for (i = 1; i <= tot_hours; i++) {
-        if (tot_hours == i) {
-          time_slots.push({ slot: "slot" + i, start_session: tmp, finish_session: closed_hours });
-          break;
-        }
-        finish = (split_open[0] * 1 + i) + ":" + split_open[1] + ":" + split_open[2];
-        time_slots.push({ slot: "slot" + i, start_session: tmp, finish_session: finish })
-        tmp = finish;
-      }
+      InsertTimeSlots(business_hours,time_slots);
+ 
         mysqlConnection.query(
           "SELECT days_off FROM chiusura WHERE id_palestra = ?",[id_palestra],
             (err, resul) => {
              days_off = JSON.parse(JSON.stringify(resul));            
-             let date1= new Date();
-             date1.setHours(0,0,0,0);
-             let date2= new Date();
-             date2.setHours(0,0,0,0);
-             date2.setDate(date2.getDate()+7);
-             date_tmp = new Date(date1);            
+             SetTime0toDates(date1,date2,date_tmp);            
               mysqlConnection.query(
                 "SELECT data,orario_inizio,orario_fine FROM prenotazione WHERE id_palestra = ? AND data >= ? AND data <= ?",[id_palestra,date1,date2],
                   (err, resul) => {
                     reservation = JSON.parse(JSON.stringify(resul));
                     days_data = {day0:[],day1:[],day2:[],day3:[],day4:[],day5:[],day6:[]};
                     res_data = {day0:[],day1:[],day2:[],day3:[],day4:[],day5:[],day6:[]};                                      
-                    for(i=0; i<7; i++){
-                      d = "day"+i;
-                      for(var k = 0; k < reservation.length; k++) {
-                        var obj = reservation[k];
-                        reservation_date = new Date(obj.data);
-                        if(date1.getTime() === reservation_date.getTime()){
-                          days_data[d].push({start_session: obj.orario_inizio, finish_session: obj.orario_fine});                          
-                        }
-                      } 
-                      date1.setDate(date1.getDate()+1);
-                    }                
-                    for(l=0; l<7;l++){
-                      d = "day"+l;
-                        for (z = 0; z < time_slots.length; z++) {
-                          count_users[z] = 0;
-                          for (k = 0; k < days_data[d].length; k++) {
-                            if (time_slots[z].start_session == days_data[d][k].start_session && time_slots[z].finish_session == days_data[d][k].finish_session) {
-                              count_users[z] += 1;
-                            }                            
-                          }
-                          
-                              res_data[d].push({  start_session: ChangeTimeFormat(time_slots[z].start_session),  remaining_places: (business_hours[0].capacità - count_users[z]) });                            
-                        }
-                      }
-                      for(m=0; m<7; m++){
-                        d = "day"+m;
-                        status = true;
-                        start_day = date_tmp.getDay();
-                        for(n=0; n<days_off.length; n++){
-                          if(start_day == days_off[n].days_off){
-                            status = false;
-                          }
-                        } 
-                        if(status){
-                          res_data[d].push({status_opened: true, date: ChangeDateFormat(date_tmp)})
-                        }
-                        else{
-                          res_data[d].push({status_opened: false, date: ChangeDateFormat(date_tmp)})
-                          status = true
-                        }
-                        date_tmp.setDate(date_tmp.getDate()+1);  
-                      }
+                    daysDataInsert(reservation,days_data,date1);    
+                    console.log(res_data);
+                    sessionInsert(time_slots,days_data,res_data,business_hours);
+                    dateStatusInsert(date_tmp,days_off,res_data);  
                       res.send(res_data);
                 }        
               );
@@ -226,4 +166,85 @@ function ChangeDateFormat(date){
 function ChangeTimeFormat(time){
   t = time.split(':')
   return t[0]+":"+t[1];
+}
+
+function InsertTimeSlots(business_hours, time_slots){
+  
+  open_hours = business_hours[0].orario_apertura;
+  closed_hours = business_hours[0].orario_chiusura;      
+  split_open = open_hours.split(':');
+  split_closed = closed_hours.split(":");
+  total_time_open = (split_open[0] * 60 * 60) + (split_open[1] * 60) + (split_open[2]);
+  total_time_closed = (split_closed[0] * 60 * 60) + (split_closed[1] * 60) + (split_closed[2]);
+  tot_hours = parseInt(((total_time_closed - total_time_open) / (60 * 60)) / 100);
+  tmp = open_hours;
+  for (i = 1; i <= tot_hours; i++) {
+    if (tot_hours == i) {
+      time_slots.push({ slot: "slot" + i, start_session: tmp, finish_session: closed_hours });
+      break;
+    }
+    finish = (split_open[0] * 1 + i) + ":" + split_open[1] + ":" + split_open[2];
+    time_slots.push({ slot: "slot" + i, start_session: tmp, finish_session: finish })
+    tmp = finish;
+  }
+  console.log(time_slots)
+}
+
+function SetTime0toDates(date1,date2,date_tmp){
+  date1.setHours(0,0,0,0);
+  date2.setHours(0,0,0,0);
+  date2.setDate(date2.getDate()+7);
+
+}
+
+function daysDataInsert(reservation,days_data,date1){
+  for(i=0; i<7; i++){
+    d = "day"+i;
+    for(var k = 0; k < reservation.length; k++) {
+      var obj = reservation[k];
+      reservation_date = new Date(obj.data);
+      if(date1.getTime() === reservation_date.getTime()){
+        days_data[d].push({start_session: obj.orario_inizio, finish_session: obj.orario_fine});                          
+      }
+    } 
+    date1.setDate(date1.getDate()+1);
+  }            
+}
+
+function sessionInsert(time_slots,days_data,res_data,business_hours){
+  count_users=[];
+  for(l=0; l<7;l++){
+    d = "day"+l;
+      for (z = 0; z < time_slots.length; z++) {
+        count_users[z] = 0;
+        for (k = 0; k < days_data[d].length; k++) {
+          if (time_slots[z].start_session == days_data[d][k].start_session && time_slots[z].finish_session == days_data[d][k].finish_session) {
+            count_users[z] += 1;
+          }                            
+        }
+        
+          res_data[d].push({  start_session: ChangeTimeFormat(time_slots[z].start_session),  finish_session: ChangeTimeFormat(time_slots[z].finish_session), remaining_places: (business_hours[0].capacità - count_users[z]) });                            
+      }
+    }
+}
+
+function dateStatusInsert(date_tmp,days_off,res_data){
+  for(m=0; m<7; m++){
+    d = "day"+m;
+    status = true;
+    start_day = date_tmp.getDay();
+    for(n=0; n<days_off.length; n++){
+      if(start_day == days_off[n].days_off){
+        status = false;
+      }
+    } 
+    if(status){
+      res_data[d].push({status_opened: true, date: ChangeDateFormat(date_tmp)})
+    }
+    else{
+      res_data[d].push({status_opened: false, date: ChangeDateFormat(date_tmp)})
+      status = true
+    }
+    date_tmp.setDate(date_tmp.getDate()+1);  
+  }
 }
