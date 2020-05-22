@@ -75,12 +75,16 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/prenotazione", (req, res) => {
-  let inp = req.body;
-  let date
-  let prenotazione = {
+  let inp, date, prenotazione;
+
+  inp = req.body;
+  row_date = new Date(inp.data);
+  date = ChangeDateFormat2(row_date) 
+  console.log(date)
+  prenotazione = {
     id_palestra: inp.id_palestra,
     email: inp.email,
-    data: inp.data,
+    data: date,
     orario_inizio: inp.orario_inizio,
     orario_fine: inp.orario_fine
   };
@@ -88,8 +92,8 @@ app.post("/prenotazione", (req, res) => {
     "INSERT INTO prenotazione SET ?",
     prenotazione,
     (err, results) => {
-      if (!err) res.send("Prenotazione inserita");
-      else res.send("Non puoi prenotarti piu di una volta al giorno");
+      if (!err) res.send({done: true});
+      else res.send({done: false});
     }
   );
 });
@@ -166,6 +170,26 @@ app.post("/reservationInfo", (req, res) => {
   ); 
 });
 
+app.post("/reservationDelete", (req, res) => {
+  inp = req.body;
+  id_palestra = inp.id_palestra;
+  email = inp.email;
+  row_date = inp.data
+  date = row_date;
+  console.log(id_palestra+" "+email+" "+date)
+  mysqlConnection.query(
+    "DELETE FROM prenotazione WHERE id_palestra = ? AND email = ? AND data = ?",[id_palestra, email, row_date],
+    (err, results) => {
+      if(!err){
+        res.json({done: true})        
+      }
+      else{
+        res.json({done: false})
+      } 
+    }
+  );
+});
+
 function ChangeDateFormat(date){
   
   var year = date.getFullYear();
@@ -179,6 +203,18 @@ function ChangeDateFormat(date){
   return day + '-' + month + '-' + year;
 }
 
+function ChangeDateFormat2(date){
+  var year = date.getFullYear();
+
+  var month = (1 + date.getMonth()).toString();
+  month = month.length > 1 ? month : '0' + month;
+
+  var day = date.getDate().toString();
+  day = day.length > 1 ? day : '0' + day;
+  
+  return year + '-' + month + '-' + day +" "+"00:00:00";
+  
+}
 function ChangeTimeFormat(time){
   t = time.split(':')
   return t[0]+":"+t[1];
@@ -210,6 +246,7 @@ function SetTime0toDates(date1,date2,date_tmp){
   date1.setHours(0,0,0,0);
   date2.setHours(0,0,0,0);
   date2.setDate(date2.getDate()+7);
+  date_tmp.setHours(0,0,0,0);
 
 }
 
