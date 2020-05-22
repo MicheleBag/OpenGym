@@ -95,8 +95,10 @@ class PrenotazioniGym extends Component {
 
     reserve(reservationData).then((res) => {
       //controllo risposta
-      if (res) this.setState({ msg: "Registrazione effettuata" });
-      else this.setState({ msg: "Ops! Qualcosa è andato storto" });
+      if (res) {
+        this.setState({ msg: "Prenotazione effettuata!" });
+        console.log(res);
+      } else this.setState({ msg: "Ops! Qualcosa è andato storto" });
     });
   }
 

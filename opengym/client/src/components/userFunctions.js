@@ -82,15 +82,17 @@ export const edit = (data) => {
 };
 
 export const reserve = (reserveData) => {
+  console.log(reserveData.data);
   return axios
     .post("/prenotazione", {
       id_palestra: reserveData.id,
       email: reserveData.email,
-      data: reserveData.date,
+      data: reserveData.data,
       orario_inizio: reserveData.timeStart,
       orario_fine: reserveData.timeEnd,
     })
     .then((response) => {
+      console.log(response);
       return response.data.done;
     })
     .catch((err) => {
