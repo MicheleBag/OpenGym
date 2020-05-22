@@ -56,7 +56,7 @@ export const getGymReservation = (gymId) => {
     })
     .then((response) => {
       console.log(response.data);
-      return response.data.day0;
+      return response.data;
     })
     .catch((err) => {
       console.log(err);
