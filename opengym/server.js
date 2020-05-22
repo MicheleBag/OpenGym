@@ -180,7 +180,7 @@ app.post("/reservationInfo", (req, res) => {
                             }                            
                           }
                           
-                              res_data[d].push({  start_session: time_slots[z].start_session,  remaining_places: (business_hours[0].capacità - count_users[z]) });                            
+                              res_data[d].push({  start_session: ChangeTimeFormat(time_slots[z].start_session),  remaining_places: (business_hours[0].capacità - count_users[z]) });                            
                         }
                       }
                       for(m=0; m<7; m++){
@@ -193,10 +193,10 @@ app.post("/reservationInfo", (req, res) => {
                           }
                         } 
                         if(status){
-                          res_data[d].push({status_opened: true, date: JSON.stringify(date_tmp)})
+                          res_data[d].push({status_opened: true, date: ChangeDateFormat(date_tmp)})
                         }
                         else{
-                          res_data[d].push({status_opened: false, date: JSON.stringify(date_tmp)})
+                          res_data[d].push({status_opened: false, date: ChangeDateFormat(date_tmp)})
                           status = true
                         }
                         date_tmp.setDate(date_tmp.getDate()+1);  
@@ -209,3 +209,21 @@ app.post("/reservationInfo", (req, res) => {
     }
   );   
 });
+
+function ChangeDateFormat(date){
+  
+  var year = date.getFullYear();
+
+  var month = (1 + date.getMonth()).toString();
+  month = month.length > 1 ? month : '0' + month;
+
+  var day = date.getDate().toString();
+  day = day.length > 1 ? day : '0' + day;
+  
+  return day + '-' + month + '-' + year;
+}
+
+function ChangeTimeFormat(time){
+  t = time.split(':')
+  return t[0]+":"+t[1];
+}
