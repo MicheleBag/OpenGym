@@ -174,11 +174,10 @@ app.post("/reservationDelete", (req, res) => {
   inp = req.body;
   id_palestra = inp.id_palestra;
   email = inp.email;
-  row_date = inp.data
-  date = row_date;
-  console.log(id_palestra+" "+email+" "+date)
+  row_data = inp.data; 
+  date = ChangeDateFormat2(row_data); 
   mysqlConnection.query(
-    "DELETE FROM prenotazione WHERE id_palestra = ? AND email = ? AND data = ?",[id_palestra, email, row_date],
+    "DELETE FROM prenotazione WHERE id_palestra = ? AND email = ? AND data = ?",[id_palestra, email, date],
     (err, results) => {
       if(!err){
         res.json({done: true})        
@@ -189,6 +188,42 @@ app.post("/reservationDelete", (req, res) => {
     }
   );
 });
+
+app.post("/updateAccount", (req, res) => {
+  inp = req.body;
+  email = inp.email;
+  first_name = inp.first_name;
+  last_name = inp.last_name;
+  current_password = inp.current_password;
+  new_password = inp.new_password;
+ 
+  if (email && current_password) {
+    mysqlConnection.query(
+      "SELECT * FROM utente WHERE email = ? AND password = ?",
+      [email, current_password],
+      (err, results) => {
+        if (results.length > 0) {
+          mysqlConnection.query(
+            "UPDATE utente SET nome = ?, cognome = ?, password = ?  WHERE email = ?",[first_name,last_name,new_password,email],
+            (err, results) => {
+              if(!err){
+                res.json({ done: true})
+              }
+              else{
+                res.json({ done: false})
+              }
+            }
+          );
+        } else {
+          res.json({ done: false });
+        }
+      }
+    );
+  } else {
+    res.json({done: false});
+  }
+});
+
 
 function ChangeDateFormat(date){
   
