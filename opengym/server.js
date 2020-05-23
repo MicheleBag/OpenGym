@@ -101,7 +101,7 @@ app.post("/reservation", (req, res) => {
 app.get("/search", (req, res) => {
   let word = "'" + req.query.word + "?'";
   mysqlConnection.query(
-    "SELECT id_palestra,nome,indirizzo,immagine FROM palestra WHERE nome REGEXP " + word,
+    "SELECT id_palestra,nome,indirizzo,città,immagine FROM palestra WHERE active = ? AND nome REGEXP " + word,true,
     (err, results) => {
       if(!err){
         let json_searched_names = JSON.parse(JSON.stringify(results));
@@ -226,18 +226,27 @@ app.put("/account", (req, res) => {
   }
 });
 
-app.get("/userReservation", (req, res) => {
+app.get("/userReservationInfo", (req, res) => {
   inp = req.query;
   email = inp.email;
   today_date = new Date();
   today_date.setHours(0,0,0,0);
 
   mysqlConnection.query(
-    "SELECT data,orario_inizio,orario_fine FROM prenotazione WHERE email = ? AND data >= ?",[email,today_date],
+    "SELECT id_palestra, nome,data,orario_inizio,orario_fine FROM prenotazione INNER JOIN palestra USING(id_palestra) WHERE email = ? AND data >= ?",[email,today_date],
     (err, results) => {
       if(!err){
-        dati = JSON.parse(JSON.stringify(results));
-        console.log(dati)
+        reservations_raw = JSON.parse(JSON.stringify(results));
+        for(i=0; i<reservations_raw.length; i++){
+          reservation_date = new Date (reservations_raw[i].data);
+          reservation_start_time = ChangeTimeFormat(reservations_raw[i].orario_inizio);
+          reservation_finish_time = ChangeTimeFormat(reservations_raw[i].orario_fine);
+          reservations_raw[i].data = ChangeDateFormat(reservation_date);
+          reservations_raw[i].orario_inizio = reservation_start_time;
+          reservations_raw[i].orario_fine = reservation_finish_time;
+        }
+        console.log(reservations_raw)
+        res.json(reservations_raw)
       }
       else{
         res.json({done: false})
