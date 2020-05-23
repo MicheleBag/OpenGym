@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mag 21, 2020 alle 20:58
+-- Creato il: Mag 23, 2020 alle 21:10
 -- Versione del server: 10.4.11-MariaDB
 -- Versione PHP: 7.2.30
 
@@ -50,28 +50,31 @@ CREATE TABLE `palestra` (
   `id_palestra` int(11) NOT NULL,
   `nome` varchar(100) NOT NULL,
   `indirizzo` varchar(100) NOT NULL,
+  `città` varchar(100) NOT NULL,
   `immagine` blob DEFAULT NULL,
   `capacità` int(11) NOT NULL,
   `orario_apertura` time NOT NULL,
   `orario_chiusura` time NOT NULL,
-  `giorni_off` int(11) NOT NULL
+  `email` varchar(100) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `active` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `palestra`
 --
 
-INSERT INTO `palestra` (`id_palestra`, `nome`, `indirizzo`, `immagine`, `capacità`, `orario_apertura`, `orario_chiusura`, `giorni_off`) VALUES
-(1, 'eraldo@gmail.com', 'aldo', '', 20, '12:00:00', '00:00:00', 2),
-(2, 'eralddo@gmail.com', 'alddddo', '', 20, '12:00:00', '00:00:00', 2),
-(3, 'eralssddo@gmail.com', 'alddaaddo', '', 20, '12:00:00', '00:00:00', 2),
-(4, 'eralssddo@gmail.com', 'aldaadaaddo', '', 20, '12:00:00', '00:00:00', 2),
-(5, 'eralssddo@gmail.com', 'aldaadssaaddo', '', 20, '12:00:00', '00:00:00', 2),
-(6, 'eralssddo@gmail.com', 'aldaadssaaddo', '', 20, '12:00:00', '00:00:00', 2),
-(7, 'eralssddo@gmail.com', 'aldaadssaaddo', '', 20, '12:00:00', '00:00:00', 2),
-(8, 'spoleto fitness palestra', 'via tito sinibaldi 18', NULL, 30, '24:00:37', '30:00:37', 2),
-(9, 'terni fit', 'via giacomo reggiani', NULL, 39, '09:25:00', '20:10:00', 0),
-(10, 'palest', 'spoleto', NULL, 34, '09:59:00', '20:10:00', 3);
+INSERT INTO `palestra` (`id_palestra`, `nome`, `indirizzo`, `città`, `immagine`, `capacità`, `orario_apertura`, `orario_chiusura`, `email`, `password`, `active`) VALUES
+(1, 'eraldo@gmail.com', 'aldo', '', '', 20, '12:00:00', '00:00:00', '', '', 0),
+(2, 'eralddo@gmail.com', 'alddddo', '', '', 20, '12:00:00', '00:00:00', '', '', 1),
+(3, 'eralssddo@gmail.com', 'alddaaddo', '', '', 20, '12:00:00', '00:00:00', '', '', 1),
+(4, 'eralssddo@gmail.com', 'aldaadaaddo', '', '', 20, '12:00:00', '00:00:00', '', '', 1),
+(5, 'eralssddo@gmail.com', 'aldaadssaaddo', '', '', 20, '12:00:00', '00:00:00', '', '', 1),
+(6, 'eralssddo@gmail.com', 'aldaadssaaddo', '', '', 20, '12:00:00', '00:00:00', '', '', 1),
+(7, 'eralssddo@gmail.com', 'aldaadssaaddo', '', '', 20, '12:00:00', '00:00:00', '', '', 1),
+(8, 'spoleto fitness palestra', 'via tito sinibaldi 18', '', NULL, 30, '24:00:37', '30:00:37', '', '', 1),
+(9, 'terni fit', 'via giacomo reggiani', '', NULL, 1, '09:25:00', '20:10:00', '', '', 1),
+(10, 'palest', 'spoleto', '', NULL, 34, '09:59:00', '20:10:00', '', '', 1);
 
 -- --------------------------------------------------------
 
@@ -92,9 +95,14 @@ CREATE TABLE `prenotazione` (
 --
 
 INSERT INTO `prenotazione` (`id_palestra`, `email`, `data`, `orario_inizio`, `orario_fine`) VALUES
-(9, 'aldo22@nonso.com', '2020-05-24 00:00:00', '09:07:27', '21:07:27'),
-(9, 'aldo@nonso.com', '2020-05-23 15:17:08', '09:25:00', '10:25:00'),
+(9, 'aldo@nonso.com', '2020-05-23 00:00:00', '09:25:00', '10:25:00'),
 (9, 'aldtre3o22@nrerronso.com', '2020-05-23 00:00:00', '13:07:59', '18:09:34'),
+(9, 'eraldo', '0000-00-00 00:00:00', '09:00:00', '21:00:00'),
+(9, 'eraldo', '2001-05-02 00:00:00', '09:25:00', '10:25:00'),
+(9, 'eraldo', '2020-02-06 00:00:00', '09:00:00', '21:00:00'),
+(9, 'eraldo', '2020-06-25 00:00:00', '09:25:00', '10:25:00'),
+(9, 'eraldo', '2020-06-29 00:00:00', '09:25:00', '10:25:00'),
+(9, 'eraldo', '2020-07-06 00:00:00', '09:00:00', '21:00:00'),
 (9, 'michele@gmail.com', '2020-05-23 00:00:00', '09:25:00', '10:25:00');
 
 -- --------------------------------------------------------
@@ -115,7 +123,7 @@ CREATE TABLE `utente` (
 --
 
 INSERT INTO `utente` (`email`, `nome`, `cognome`, `password`) VALUES
-('aldo22@nonso.com', 'aldo', 'rossi', 'eeweq'),
+('aldo22@nonso.com', 'giovanni', 'troisi', '44'),
 ('aldo@nonso.com', 'edsad', 'kfdsfa', 'sdasfas'),
 ('aldtre3o22@nrerronso.com', 'aldo', 'rossi', 'eeweq'),
 ('eraldo', 'edsad', 'kfdsfa', 'sdasfas'),
