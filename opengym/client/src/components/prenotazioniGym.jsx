@@ -41,7 +41,7 @@ class PrenotazioniGym extends Component {
           .then((res) => {
             this.setState({ reservationList: res });
             this.setState({ dataReady: true });
-            console.log(this.state.reservationList);
+            //console.log(this.state.reservationList);
           })
           .catch((err) => {
             console.log(err);
@@ -109,7 +109,7 @@ class PrenotazioniGym extends Component {
       return data.map((d) => (
         <React.Fragment>
           <th scope="col" className="p-1">
-            {d[10].date}
+            {d.slice(-1)[0].date}
           </th>
         </React.Fragment>
       ));
@@ -120,15 +120,17 @@ class PrenotazioniGym extends Component {
       //console.log(data);
       var row = [];
       var style = "btn-outline-primary";
+      var nHours = Object.keys(data[0]).length - 1;
+      var nDays = Object.keys(data).length;
 
-      for (let j = 0; j < 10; j++) {
+      for (let j = 0; j < nHours; j++) {
         row.push(<tr />);
         row.push(
           <th scope="row" className="p-1 align-middle">
             {data[0][j].start_session + " -- " + data[0][j].finish_session}
           </th>
         );
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < nDays; i++) {
           if (data[i][j].remaining_places < 10) style = "btn-outline-danger";
           if (data[i][j].remaining_places < 1) {
             style = "btn-outline-secondary disabled";
