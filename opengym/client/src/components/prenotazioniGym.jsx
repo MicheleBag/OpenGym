@@ -65,8 +65,10 @@ class PrenotazioniGym extends Component {
 
   //used to get date and hours when user's click on a btn and change render components
   changeState = (i, j, e) => {
-    if (i === false) this.setState({ submitted: false });
-    else {
+    if (i === false) {
+      this.setState({ submitted: false });
+      this.setState({ msg: "" });
+    } else {
       this.setState({ submitted: true });
       var data = this.fetchData();
       var day = data[i][10].date;
@@ -98,13 +100,14 @@ class PrenotazioniGym extends Component {
       if (res) {
         this.setState({ msg: "Prenotazione effettuata!" });
         console.log(res);
-      } else this.setState({ msg: "Ops! Qualcosa è andato storto" });
+      } else
+        this.setState({ msg: "Hai già una prenotazione effettuata per oggi!" });
     });
   }
 
   render() {
     const tableHead = () => {
-      var data = this.fetchData();
+      const data = this.fetchData();
       console.log(data);
       return data.map((d) => (
         <React.Fragment>
@@ -116,12 +119,12 @@ class PrenotazioniGym extends Component {
     };
 
     const tableRow = () => {
-      var data = this.fetchData();
-      //console.log(data);
+      const data = this.fetchData();
       var row = [];
-      var style = "btn-outline-primary";
-      var nHours = Object.keys(data[0]).length - 1;
-      var nDays = Object.keys(data).length;
+      const style = "btn-outline-primary";
+      const nHours = Object.keys(data[0]).length - 1;
+      const nDays = Object.keys(data).length;
+      const nLowPlaces = 10;
 
       for (let j = 0; j < nHours; j++) {
         row.push(<tr />);
@@ -131,20 +134,31 @@ class PrenotazioniGym extends Component {
           </th>
         );
         for (let i = 0; i < nDays; i++) {
-          if (data[i][j].remaining_places < 10) style = "btn-outline-danger";
-          if (data[i][j].remaining_places < 1) {
-            style = "btn-outline-secondary disabled";
+          var status = data[i].slice(-1)[0].status_opened;
+          console.log(status);
+          if (status) {
+            if (data[i][j].remaining_places < nLowPlaces)
+              style = "btn-outline-danger";
+            if (data[i][j].remaining_places <= 0) {
+              style = "btn-outline-secondary disabled";
+            }
+            row.push(
+              <td className="p-1">
+                <a
+                  className={"btn px-4 " + style}
+                  onClick={(e) => this.changeState(i, j, e)}
+                >
+                  {data[i][j].remaining_places}
+                </a>
+              </td>
+            );
+          } else {
+            row.push(
+              <td className="p-1">
+                <a className={"btn px-4 text-danger disabled"}>//</a>
+              </td>
+            );
           }
-          row.push(
-            <td className="p-1">
-              <a
-                className={"btn px-4 " + style}
-                onClick={(e) => this.changeState(i, j, e)}
-              >
-                {data[i][j].remaining_places}
-              </a>
-            </td>
-          );
         }
       }
       return row;
@@ -152,7 +166,7 @@ class PrenotazioniGym extends Component {
 
     const table = () => (
       <div className="col-10">
-        <table className="table table-bordered bg-white mt-5">
+        <table className="table table-bordered bg-white mt-5 mb-0">
           <thead>
             <tr>
               <th scope="col" className="p-1">
@@ -162,6 +176,31 @@ class PrenotazioniGym extends Component {
             </tr>
           </thead>
           <tbody>{tableRow()}</tbody>
+        </table>
+        <table className="table bg-white">
+          <tr>
+            <td className="p-1">
+              <a className={"btn px-4 btn-outline-primary mr-1"}>#</a>
+              <label>Disponibile</label>
+            </td>
+
+            <td className="p-1">
+              <a className={"btn px-4 btn-outline-danger mr-1 ml-2"}>#</a>
+              <label>Poca disponibilità</label>
+            </td>
+            <td className="p-1">
+              <a
+                className={"btn px-4 btn-outline-secondary disabled mr-1 ml-2"}
+              >
+                #
+              </a>
+              <label>Disponibilità esaurita</label>
+            </td>
+            <td className="p-1">
+              <a className={"btn px-4 text-danger disabled"}>//</a>
+              <label>Palestra chiusa</label>
+            </td>
+          </tr>
         </table>
       </div>
     );

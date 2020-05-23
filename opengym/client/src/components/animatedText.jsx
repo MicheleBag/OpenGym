@@ -27,7 +27,7 @@ class AnimatedText extends Component {
             config={{ delay: 500, duration: 300 }}
           >
             {(item) => (props) => (
-              <p className="mb-1 mr-auto" style={props}>
+              <p className="mb-1 mr-auto mt-auto" style={props}>
                 {this.props.point}
               </p>
             )}
