@@ -24,7 +24,7 @@ app.get("/", function (req, res, next) {
   res.send("Server runnning on port 5000");
 });
 
-app.post("/registrati", (req, res) => {
+app.post("/account", (req, res) => {
   let inp = req.body;
   let utente = {
     email: inp.email,
@@ -74,7 +74,7 @@ app.post("/login", (req, res) => {
   }
 });
 
-app.post("/prenotazione", (req, res) => {
+app.post("/reservation", (req, res) => {
   let inp, date, prenotazione;
   console.log(req.body);
   inp = req.body;
@@ -98,7 +98,7 @@ app.post("/prenotazione", (req, res) => {
   );
 });
 
-app.post("/search", (req, res) => {
+app.get("/search", (req, res) => {
   let word = "'" + req.body.word + "?'";
   mysqlConnection.query(
     "SELECT id_palestra,nome,indirizzo,immagine FROM palestra WHERE nome REGEXP " + word,
@@ -114,7 +114,7 @@ app.post("/search", (req, res) => {
   );
 });
 
-app.post("/reservationInfo", (req, res) => {
+app.get("/reservation", (req, res) => {
   let id_palestra = req.body.id_palestra;
   let business_hours;
   let time_slots = [];
@@ -170,7 +170,7 @@ app.post("/reservationInfo", (req, res) => {
   ); 
 });
 
-app.post("/reservationDelete", (req, res) => {
+app.delete("/reservation", (req, res) => {
   inp = req.body;
   id_palestra = inp.id_palestra;
   email = inp.email;
@@ -189,7 +189,7 @@ app.post("/reservationDelete", (req, res) => {
   );
 });
 
-app.post("/updateAccount", (req, res) => {
+app.put("/account", (req, res) => {
   inp = req.body;
   email = inp.email;
   first_name = inp.first_name;
