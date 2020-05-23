@@ -24,7 +24,7 @@ app.get("/", function (req, res, next) {
   res.send("Server runnning on port 5000");
 });
 
-app.post("/registrati", (req, res) => {
+app.post("/account", (req, res) => {
   let inp = req.body;
   let utente = {
     email: inp.email,
@@ -74,7 +74,7 @@ app.post("/login", (req, res) => {
   }
 });
 
-app.post("/prenotazione", (req, res) => {
+app.post("/reservation", (req, res) => {
   let inp, date, prenotazione;
   console.log(req.body);
   inp = req.body;
@@ -98,7 +98,7 @@ app.post("/prenotazione", (req, res) => {
   );
 });
 
-app.post("/search", (req, res) => {
+app.get("/search", (req, res) => {
   let word = "'" + req.body.word + "?'";
   mysqlConnection.query(
     "SELECT id_palestra,nome,indirizzo,immagine FROM palestra WHERE nome REGEXP " + word,
@@ -114,7 +114,7 @@ app.post("/search", (req, res) => {
   );
 });
 
-app.post("/reservationInfo", (req, res) => {
+app.get("/reservation", (req, res) => {
   let id_palestra = req.body.id_palestra;
   let business_hours;
   let time_slots = [];
@@ -170,15 +170,14 @@ app.post("/reservationInfo", (req, res) => {
   ); 
 });
 
-app.post("/reservationDelete", (req, res) => {
+app.delete("/reservation", (req, res) => {
   inp = req.body;
   id_palestra = inp.id_palestra;
   email = inp.email;
-  row_date = inp.data
-  date = row_date;
-  console.log(id_palestra+" "+email+" "+date)
+  row_data = inp.data; 
+  date = ChangeDateFormat2(row_data); 
   mysqlConnection.query(
-    "DELETE FROM prenotazione WHERE id_palestra = ? AND email = ? AND data = ?",[id_palestra, email, row_date],
+    "DELETE FROM prenotazione WHERE id_palestra = ? AND email = ? AND data = ?",[id_palestra, email, date],
     (err, results) => {
       if(!err){
         res.json({done: true})        
@@ -189,6 +188,42 @@ app.post("/reservationDelete", (req, res) => {
     }
   );
 });
+
+app.put("/account", (req, res) => {
+  inp = req.body;
+  email = inp.email;
+  first_name = inp.first_name;
+  last_name = inp.last_name;
+  current_password = inp.current_password;
+  new_password = inp.new_password;
+ 
+  if (email && current_password) {
+    mysqlConnection.query(
+      "SELECT * FROM utente WHERE email = ? AND password = ?",
+      [email, current_password],
+      (err, results) => {
+        if (results.length > 0) {
+          mysqlConnection.query(
+            "UPDATE utente SET nome = ?, cognome = ?, password = ?  WHERE email = ?",[first_name,last_name,new_password,email],
+            (err, results) => {
+              if(!err){
+                res.json({ done: true})
+              }
+              else{
+                res.json({ done: false})
+              }
+            }
+          );
+        } else {
+          res.json({ done: false });
+        }
+      }
+    );
+  } else {
+    res.json({done: false});
+  }
+});
+
 
 function ChangeDateFormat(date){
   
