@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { getGymReservation, reserve } from "./userFunctions";
 import AnimatedText from "./animatedText";
 import jsonwebtoken from "jsonwebtoken";
+import { Spring, animated, config } from "react-spring/renderprops";
 
 class PrenotazioniGym extends Component {
   constructor(props) {
@@ -71,7 +72,7 @@ class PrenotazioniGym extends Component {
     } else {
       this.setState({ submitted: true });
       var data = this.fetchData();
-      var day = data[i][10].date;
+      var day = data[i].slice(-1)[0].date;
       var timeStart = data[i][j].start_session;
       var timeEnd = data[i][j].finish_session;
       this.setState({
@@ -166,7 +167,7 @@ class PrenotazioniGym extends Component {
 
     const table = () => (
       <div className="col-10">
-        <table className="table table-bordered bg-white mt-5 mb-0">
+        <table className="table table-bordered bg-white mt-3 mb-0">
           <thead>
             <tr>
               <th scope="col" className="p-1">
@@ -334,9 +335,19 @@ class PrenotazioniGym extends Component {
     const emptyPage = <h1>Data loading</h1>;
 
     return (
-      <React.Fragment>
-        {this.state.dataReady ? page() : emptyPage}
-      </React.Fragment>
+      <Spring
+        from={{ opacity: 0 }}
+        to={{ opacity: 1 }}
+        config={(config.molasses, { delay: 200 })}
+      >
+        {(props) => (
+          <React.Fragment>
+            <animated.div style={props}>
+              {this.state.dataReady ? page() : emptyPage}
+            </animated.div>
+          </React.Fragment>
+        )}
+      </Spring>
     );
   }
 }

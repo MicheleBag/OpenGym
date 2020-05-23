@@ -41,7 +41,7 @@ export const getGymList = (gymName) => {
       word: gymName,
     })
     .then((response) => {
-      console.log(response);
+      //console.log(response);
       return response.data;
     })
     .catch((err) => {
