@@ -1,7 +1,7 @@
 import axios from "axios";
 export const register = (newUser) => {
   return axios
-    .post("/registrati", {
+    .post("/account", {
       name: newUser.name,
       surname: newUser.surname,
       email: newUser.email,
@@ -36,12 +36,15 @@ export const checkState = () => {
 };
 
 export const getGymList = (gymName) => {
+  console.log(gymName);
   return axios
-    .post("/search", {
-      word: gymName,
+    .get("/search", {
+      params: {
+        word: gymName,
+      },
     })
     .then((response) => {
-      //console.log(response);
+      console.log(response);
       return response.data;
     })
     .catch((err) => {
@@ -51,8 +54,10 @@ export const getGymList = (gymName) => {
 
 export const getGymReservation = (gymId) => {
   return axios
-    .post("/reservationInfo", {
-      id_palestra: gymId,
+    .get("/reservation", {
+      params: {
+        id_palestra: gymId,
+      },
     })
     .then((response) => {
       //console.log(response.data);
@@ -65,7 +70,7 @@ export const getGymReservation = (gymId) => {
 
 export const edit = (data) => {
   return axios
-    .post("/modificaDati", {
+    .put("/account", {
       name: data.name,
       surname: data.surname,
       email: data.email,
@@ -84,7 +89,7 @@ export const edit = (data) => {
 export const reserve = (reserveData) => {
   console.log(reserveData.data);
   return axios
-    .post("/prenotazione", {
+    .post("/reservation", {
       id_palestra: reserveData.id,
       email: reserveData.email,
       data: reserveData.data,
