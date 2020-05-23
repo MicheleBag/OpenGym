@@ -99,13 +99,15 @@ app.post("/reservation", (req, res) => {
 });
 
 app.get("/search", (req, res) => {
-  let word = "'" + req.body.word + "?'";
+  let word = "'" + req.query.word + "?'";
   mysqlConnection.query(
     "SELECT id_palestra,nome,indirizzo,immagine FROM palestra WHERE nome REGEXP " + word,
     (err, results) => {
       if(!err){
         let json_searched_names = JSON.parse(JSON.stringify(results));
+        console.log(json_searched_names)
         res.json(json_searched_names);
+        
       }
       else{
         res.json({done: false})
@@ -115,7 +117,7 @@ app.get("/search", (req, res) => {
 });
 
 app.get("/reservation", (req, res) => {
-  let id_palestra = req.body.id_palestra;
+  let id_palestra = req.query.id_palestra;
   let business_hours;
   let time_slots = [];
   let reservation;
@@ -224,6 +226,25 @@ app.put("/account", (req, res) => {
   }
 });
 
+app.get("/userReservation", (req, res) => {
+  inp = req.query;
+  email = inp.email;
+  today_date = new Date();
+  today_date.setHours(0,0,0,0);
+
+  mysqlConnection.query(
+    "SELECT data,orario_inizio,orario_fine FROM prenotazione WHERE email = ? AND data >= ?",[email,today_date],
+    (err, results) => {
+      if(!err){
+        dati = JSON.parse(JSON.stringify(results));
+        console.log(dati)
+      }
+      else{
+        res.json({done: false})
+      } 
+    }
+  );
+});
 
 function ChangeDateFormat(date){
   
