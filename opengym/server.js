@@ -129,7 +129,7 @@ app.get("/reservation", (req, res) => {
   let date_tmp = new Date(date1);
   
   mysqlConnection.query(
-    "SELECT orario_apertura,orario_chiusura,capacità,giorni_off FROM palestra WHERE id_palestra = ?", id_palestra,
+    "SELECT orario_apertura,orario_chiusura,capacità FROM palestra WHERE id_palestra = ?", id_palestra,
     (err, results) => {
       if(!err){
         business_hours = JSON.parse(JSON.stringify(results));
@@ -231,9 +231,9 @@ app.get("/userReservationInfo", (req, res) => {
   email = inp.email;
   today_date = new Date();
   today_date.setHours(0,0,0,0);
-
+  console.log(email)
   mysqlConnection.query(
-    "SELECT id_palestra, nome,data,orario_inizio,orario_fine FROM prenotazione INNER JOIN palestra USING(id_palestra) WHERE email = ? AND data >= ?",[email,today_date],
+    "SELECT  id_palestra,nome,data,orario_inizio,orario_fine FROM prenotazione INNER JOIN palestra USING(id_palestra) WHERE prenotazione.email = ? AND prenotazione.data >= ?",[req.query.email,today_date],
     (err, results) => {
       if(!err){
         reservations_raw = JSON.parse(JSON.stringify(results));
@@ -249,6 +249,7 @@ app.get("/userReservationInfo", (req, res) => {
         res.json(reservations_raw)
       }
       else{
+        console.log(err)
         res.json({done: false})
       } 
     }
