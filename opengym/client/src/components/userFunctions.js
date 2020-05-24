@@ -16,23 +16,28 @@ export const register = (newUser) => {
 };
 
 export const login = (user) => {
+  var url = "";
+  var tokenName = "";
+  if (user.admin) {
+    url = "/adminLogin";
+    tokenName = "admintoken";
+  } else {
+    url = "/login";
+    tokenName = "usertoken";
+  }
   return axios
-    .post("/login", {
+    .post(url, {
       email: user.email,
       password: user.password,
     })
     .then((response) => {
       //console.log(response);
-      localStorage.setItem("usertoken", response.data.token);
+      localStorage.setItem(tokenName, response.data.token);
       return response.data.done;
     })
     .catch((err) => {
       console.log(err);
     });
-};
-
-export const checkState = () => {
-  return localStorage.usertoken ? true : false;
 };
 
 export const getGymList = (gymName) => {

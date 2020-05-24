@@ -19,16 +19,22 @@ class LoginForm extends Component {
       submitted: false, //used to redirect when submitting
       email: "",
       password: "",
-      redirectPath: "./profilo",
+      chkbox: false,
+      redirectPath: "/profilo",
       errorMsg: "",
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChangeChk = this.handleChangeChk.bind(this);
   }
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
+  }
+
+  handleChangeChk(event) {
+    this.setState({ chkbox: !this.state.chkbox });
   }
 
   handleSubmit(event) {
@@ -37,14 +43,21 @@ class LoginForm extends Component {
     const user = {
       email: this.state.email,
       password: this.state.password,
+      admin: this.state.chkbox,
     };
-
+    if (this.state.chkbox) {
+      //Admin login
+      this.setState({ redirectPath: "/admin" });
+    } else {
+      //User login
+      this.setState({ redirectPath: "/profilo" });
+    }
     login(user)
       .then((res) => {
         if (res) {
           this.setState({ submitted: false });
           localStorage.setItem("loginDone", true);
-          this.props.history.push("/profilo");
+          this.props.history.push(this.state.redirectPath);
         } else this.setState({ errorMsg: "Errore: credenziali errate" });
       })
       .catch((err) => {
@@ -100,6 +113,19 @@ class LoginForm extends Component {
                     value={this.state.password}
                     onChange={this.handleChange}
                   />
+                </div>
+                <div className="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="adminCheck"
+                    defaultChecked={this.state.chkbox}
+                    onChange={this.handleChangeChk}
+                  />
+                  <label class="form-check-label text-white">
+                    Sei un gestore di una palestra?
+                  </label>
                 </div>
                 <input
                   className="btn btn-warning btn-lg mt-2  border border-dark"

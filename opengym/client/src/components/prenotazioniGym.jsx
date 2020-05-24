@@ -50,6 +50,8 @@ class PrenotazioniGym extends Component {
       } catch (err) {
         this.setState({ id: "" });
       }
+    } else if (this.props.match.params && localStorage.admintoken) {
+      this.props.history.push("/");
     } else {
       this.props.history.push("/accedi");
     }

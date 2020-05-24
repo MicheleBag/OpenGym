@@ -5,6 +5,7 @@ import Registrati from "./registrati";
 import Accedi from "./accedi";
 import Risultati from "./risultati";
 import Profilo from "./profilo";
+import Admin from "./admin";
 import PrenotazioniGym from "./prenotazioniGym";
 import { checkState } from "./userFunctions";
 import { Spring, animated } from "react-spring/renderprops";
@@ -13,15 +14,27 @@ class NavBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedIn: checkState(),
+      loggedIn: "",
+      adminMode: "",
     };
+  }
+
+  async componentDidMount() {
+    if (localStorage.usertoken)
+      this.setState({ loggedIn: true, adminMode: false });
+
+    if (localStorage.admintoken)
+      this.setState({ loggedIn: true, adminMode: true });
   }
 
   logOut(event) {
     if (localStorage.usertoken) {
       localStorage.removeItem("usertoken");
-      this.setState({ loggedIn: false });
     }
+    if (localStorage.admintoken) {
+      localStorage.removeItem("admintoken");
+    }
+    this.setState({ loggedIn: false });
   }
 
   render() {
@@ -68,6 +81,37 @@ class NavBar extends Component {
       </ul>
     );
 
+    const adminLinks = (
+      <ul className="navbar-nav ml-auto list-group-horizontal">
+        <li className="mr-4 color">
+          <Link
+            to={"/Admin"}
+            className="nav-link btn btn-primary text-white border-white"
+          >
+            Admin
+          </Link>
+        </li>
+        <li>
+          <a
+            href="/"
+            onClick={this.logOut.bind(this)}
+            className="nav-link text-white"
+          >
+            Logout
+          </a>
+        </li>
+      </ul>
+    );
+
+    const accountCheck = () => {
+      var links = [];
+      if (this.state.loggedIn) {
+        if (this.state.adminMode) links.push(adminLinks);
+        else links.push(userLinks);
+      } else links.push(guestLinks);
+      return links;
+    };
+
     return (
       <Router>
         <React.Fragment>
@@ -82,7 +126,7 @@ class NavBar extends Component {
                 </Link>
               </li>
             </ul>
-            {this.state.loggedIn ? userLinks : guestLinks}
+            {accountCheck()}
           </nav>
           <hr className="bg-white mt-2" />
           <Switch>
@@ -91,6 +135,8 @@ class NavBar extends Component {
             <Route path="/registrati" component={Registrati} />
             <Route path="/risultati/:gymName" component={Risultati} />
             <Route path="/profilo" component={Profilo} />
+            <Route path="/admin" component={Admin} />
+
             <Route path="/prenotazioni/:gymId" component={PrenotazioniGym} />
           </Switch>
         </React.Fragment>
