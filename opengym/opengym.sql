@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mag 23, 2020 alle 21:10
+-- Creato il: Mag 24, 2020 alle 17:20
 -- Versione del server: 10.4.11-MariaDB
 -- Versione PHP: 7.2.30
 
@@ -43,6 +43,34 @@ INSERT INTO `chiusura` (`id_palestra`, `days_off`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `gym_administrator`
+--
+
+CREATE TABLE `gym_administrator` (
+  `id_palestra` int(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `gym_administrator`
+--
+
+INSERT INTO `gym_administrator` (`id_palestra`, `email`, `password`) VALUES
+(1, 'e', 'e'),
+(2, 'err', ''),
+(7, 'ee', 'ee'),
+(8, 'errr', 'errr'),
+(9, 'errrr', '22'),
+(10, 'errrrr', 'errr'),
+(24, 'eralell', 'err'),
+(25, 'eralelrl', 'err'),
+(35, 'eralerwerelrl', 'err'),
+(36, 'michh', 'err');
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `palestra`
 --
 
@@ -55,8 +83,6 @@ CREATE TABLE `palestra` (
   `capacità` int(11) NOT NULL,
   `orario_apertura` time NOT NULL,
   `orario_chiusura` time NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `password` varchar(100) NOT NULL,
   `active` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -64,17 +90,17 @@ CREATE TABLE `palestra` (
 -- Dump dei dati per la tabella `palestra`
 --
 
-INSERT INTO `palestra` (`id_palestra`, `nome`, `indirizzo`, `città`, `immagine`, `capacità`, `orario_apertura`, `orario_chiusura`, `email`, `password`, `active`) VALUES
-(1, 'eraldo@gmail.com', 'aldo', '', '', 20, '12:00:00', '00:00:00', '', '', 0),
-(2, 'eralddo@gmail.com', 'alddddo', '', '', 20, '12:00:00', '00:00:00', '', '', 1),
-(3, 'eralssddo@gmail.com', 'alddaaddo', '', '', 20, '12:00:00', '00:00:00', '', '', 1),
-(4, 'eralssddo@gmail.com', 'aldaadaaddo', '', '', 20, '12:00:00', '00:00:00', '', '', 1),
-(5, 'eralssddo@gmail.com', 'aldaadssaaddo', '', '', 20, '12:00:00', '00:00:00', '', '', 1),
-(6, 'eralssddo@gmail.com', 'aldaadssaaddo', '', '', 20, '12:00:00', '00:00:00', '', '', 1),
-(7, 'eralssddo@gmail.com', 'aldaadssaaddo', '', '', 20, '12:00:00', '00:00:00', '', '', 1),
-(8, 'spoleto fitness palestra', 'via tito sinibaldi 18', '', NULL, 30, '24:00:37', '30:00:37', '', '', 1),
-(9, 'terni fit', 'via giacomo reggiani', '', NULL, 1, '09:25:00', '20:10:00', '', '', 1),
-(10, 'palest', 'spoleto', '', NULL, 34, '09:59:00', '20:10:00', '', '', 1);
+INSERT INTO `palestra` (`id_palestra`, `nome`, `indirizzo`, `città`, `immagine`, `capacità`, `orario_apertura`, `orario_chiusura`, `active`) VALUES
+(1, 'aldo', 'via san brizio', 'spoleto', '', 20, '09:00:00', '20:30:00', 1),
+(2, 'eralddo@gmail.com', 'alddddo', '', '', 20, '12:00:00', '00:00:00', 1),
+(7, 'eralssddo@gmail.com', 'aldaadssaaddo', '', '', 20, '12:00:00', '00:00:00', 1),
+(8, 'spoleto fitness palestra', 'via tito sinibaldi 18', '', NULL, 30, '24:00:37', '30:00:37', 1),
+(9, 'terni fit', 'via giacomo reggiani', '', NULL, 1, '09:25:00', '20:10:00', 1),
+(10, 'palest', 'spoleto', '', NULL, 34, '09:59:00', '20:10:00', 1),
+(24, 'default', 'default', 'default', '', 0, '00:00:00', '00:00:00', 0),
+(25, 'default', 'default', 'default', '', 0, '00:00:00', '00:00:00', 0),
+(35, 'default', 'default', 'default', '', 0, '00:00:00', '00:00:00', 0),
+(36, 'default', 'default', 'default', '', 0, '00:00:00', '00:00:00', 0);
 
 -- --------------------------------------------------------
 
@@ -103,7 +129,7 @@ INSERT INTO `prenotazione` (`id_palestra`, `email`, `data`, `orario_inizio`, `or
 (9, 'eraldo', '2020-06-25 00:00:00', '09:25:00', '10:25:00'),
 (9, 'eraldo', '2020-06-29 00:00:00', '09:25:00', '10:25:00'),
 (9, 'eraldo', '2020-07-06 00:00:00', '09:00:00', '21:00:00'),
-(9, 'michele@gmail.com', '2020-05-23 00:00:00', '09:25:00', '10:25:00');
+(9, 'michele@gmail.com', '2020-05-30 00:00:00', '09:25:00', '10:25:00');
 
 -- --------------------------------------------------------
 
@@ -142,6 +168,16 @@ ALTER TABLE `chiusura`
   ADD KEY `id_palestra` (`id_palestra`);
 
 --
+-- Indici per le tabelle `gym_administrator`
+--
+ALTER TABLE `gym_administrator`
+  ADD PRIMARY KEY (`id_palestra`,`email`),
+  ADD UNIQUE KEY `id_palestra_2` (`id_palestra`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `id_palestra_3` (`id_palestra`,`email`),
+  ADD KEY `id_palestra` (`id_palestra`);
+
+--
 -- Indici per le tabelle `palestra`
 --
 ALTER TABLE `palestra`
@@ -169,7 +205,7 @@ ALTER TABLE `utente`
 -- AUTO_INCREMENT per la tabella `palestra`
 --
 ALTER TABLE `palestra`
-  MODIFY `id_palestra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_palestra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- Limiti per le tabelle scaricate
@@ -180,6 +216,12 @@ ALTER TABLE `palestra`
 --
 ALTER TABLE `chiusura`
   ADD CONSTRAINT `chiusura_ibfk_1` FOREIGN KEY (`id_palestra`) REFERENCES `palestra` (`id_palestra`) ON DELETE CASCADE;
+
+--
+-- Limiti per la tabella `gym_administrator`
+--
+ALTER TABLE `gym_administrator`
+  ADD CONSTRAINT `gym_administrator_ibfk_1` FOREIGN KEY (`id_palestra`) REFERENCES `palestra` (`id_palestra`) ON DELETE CASCADE;
 
 --
 -- Limiti per la tabella `prenotazione`

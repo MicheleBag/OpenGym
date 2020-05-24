@@ -173,7 +173,7 @@ app.get("/reservation", (req, res) => {
 });
 
 app.delete("/reservation", (req, res) => {
-  inp = req.body;
+  inp = req.query;
   id_palestra = inp.id_palestra;
   email = inp.email;
   row_data = inp.data; 
@@ -256,6 +256,109 @@ app.get("/userReservationInfo", (req, res) => {
   );
 });
 
+app.post("/adminLogin", (req, res) => {
+  let email = req.body.email;
+  let password = req.body.password;
+  if (email && password) {
+    mysqlConnection.query(
+      "SELECT * FROM gym_administrator WHERE email = ? AND password = ?",
+      [email, password],
+      (err, results, fields) => {
+        if (results.length > 0) {
+          const token = jwt.sign(
+            {
+              id_palestra: results[0].id_palestra,
+              email: results[0].email
+            },
+            "SEGRETO",
+            { expiresIn: 120 }
+          );
+          res.json({ done: true, token: token });
+        } else {
+          res.json({ done: false });
+        }
+      }
+    );
+  } else {
+    res.json({done: false});
+  }
+});
+
+app.put("/palestra", (req, res) => {
+  inp = req.body;
+  id_palestra = inp.id_palestra;
+  dati = {
+    
+    nome : inp.name,
+    indirizzo : inp.address,
+    città : inp.city,
+    immagine : inp.immagine,
+    capacità : inp.capacity,
+    orario_apertura : inp.open_time,
+    orario_chiusura : inp.closed_time,
+    active : true
+  }
+  mysqlConnection.query("UPDATE palestra SET ? WHERE id_palestra = ?", [dati,inp.id_palestra], (err,result) => {
+    if (!err) res.json({done: true});
+    else {
+      console.log(result)
+      console.log(err)
+      res.json({done: false});
+    }
+  });
+
+
+});
+
+app.post("/palestra", (req, res) => {
+  inp = req.body;
+  email = inp.email;
+  password = inp.password;
+  dati = {
+    nome : "default",
+    indirizzo : "default",
+    città : "default",
+    immagine : "",
+    capacità : "0",
+    orario_apertura : "00:00:00",
+    orario_chiusura : "00:00:00",
+    active : false
+  };
+  mysqlConnection.query("INSERT INTO palestra SET ?", [dati], (err,result) => {
+    if (!err){
+      mysqlConnection.query("SELECT id_palestra FROM palestra WHERE id_palestra NOT IN(SELECT id_palestra FROM gym_administrator)", (err,result) => {
+        if (!err){
+          account = {
+            id_palestra: result[0].id_palestra,
+            email: email,
+            password: password
+          };
+          mysqlConnection.query("INSERT INTO gym_administrator SET ?",[account], (err, result) =>{
+            if(!err){
+              res.json({done: true})
+            }
+            else{
+              res.json({done: false})
+              console.log(err)
+            }
+          });
+        }
+        else {
+          res.json({done: false});
+          console.log("2")
+        }
+      });
+    }
+    else {
+      res.json({done: false});
+      console.log("3")
+    }
+  });
+
+  
+
+
+});
 function ChangeDateFormat(date){
   
   var year = date.getFullYear();
