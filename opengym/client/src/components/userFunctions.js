@@ -36,7 +36,6 @@ export const checkState = () => {
 };
 
 export const getGymList = (gymName) => {
-  console.log(gymName);
   return axios
     .get("/search", {
       params: {
@@ -60,7 +59,23 @@ export const getGymReservation = (gymId) => {
       },
     })
     .then((response) => {
-      //console.log(response.data);
+      console.log(response.data);
+      return response.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const getUserReservation = (email) => {
+  return axios
+    .get("/userReservationInfo", {
+      params: {
+        email: email,
+      },
+    })
+    .then((response) => {
+      console.log(response.data);
       return response.data;
     })
     .catch((err) => {

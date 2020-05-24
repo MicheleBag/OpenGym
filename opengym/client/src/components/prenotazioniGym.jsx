@@ -109,7 +109,7 @@ class PrenotazioniGym extends Component {
   render() {
     const tableHead = () => {
       const data = this.fetchData();
-      console.log(data);
+      //console.log(data);
       return data.map((d) => (
         <React.Fragment>
           <th scope="col" className="p-1">
@@ -122,7 +122,7 @@ class PrenotazioniGym extends Component {
     const tableRow = () => {
       const data = this.fetchData();
       var row = [];
-      const style = "btn-outline-primary";
+      var style = "btn-outline-primary";
       const nHours = Object.keys(data[0]).length - 1;
       const nDays = Object.keys(data).length;
       const nLowPlaces = 10;
@@ -136,7 +136,6 @@ class PrenotazioniGym extends Component {
         );
         for (let i = 0; i < nDays; i++) {
           var status = data[i].slice(-1)[0].status_opened;
-          console.log(status);
           if (status) {
             if (data[i][j].remaining_places < nLowPlaces)
               style = "btn-outline-danger";
@@ -245,7 +244,7 @@ class PrenotazioniGym extends Component {
                   </div>
                   <div className="form-group form-inline">
                     <label style={this.textStyle} className="ml-4 mr-auto">
-                      Indirizzo email
+                      Email
                     </label>
                     <input
                       type="email"
@@ -304,7 +303,7 @@ class PrenotazioniGym extends Component {
                   onClick={(e) => this.changeState(false, false, e)}
                   className="btn btn-link mr-3 col-sm-5"
                 >
-                  Annulla
+                  Indietro
                 </button>
                 <input
                   className="btn btn-warning btn-lg mt-2 px-1 col-sm-5 border border-dark"

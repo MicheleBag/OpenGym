@@ -43,6 +43,7 @@ class Risultati extends Component {
       data.push({
         id_palestra: this.state.gymList[k].id_palestra,
         nome: this.state.gymList[k].nome,
+        città: this.state.gymList[k].città,
         indirizzo: this.state.gymList[k].indirizzo,
         immagine: this.state.gymList[k].immagine.data,
       });
@@ -74,7 +75,9 @@ class Risultati extends Component {
                     />
                     <div className="card-body">
                       <h5 className="card-title">{d.nome}</h5>
-                      <p className="card-text">{d.indirizzo}</p>
+                      <p className="card-text">
+                        {d.città}, {d.indirizzo}
+                      </p>
                       <a
                         href={"/prenotazioni/" + d.id_palestra}
                         className="btn btn-primary"

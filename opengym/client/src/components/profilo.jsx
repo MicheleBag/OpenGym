@@ -3,20 +3,21 @@ import jsonwebtoken from "jsonwebtoken";
 import { edit } from "./userFunctions";
 import AnimatedText from "./animatedText";
 import { Spring, animated, config } from "react-spring/renderprops";
+import { getUserReservation } from "./userFunctions";
 
 class Profilo extends Component {
   constructor(props) {
-    const data = jsonwebtoken.decode(localStorage.usertoken);
-    console.log(data);
     super(props);
     this.state = {
       editMode: false,
-      name: data.nome,
-      surname: data.cognome,
-      email: data.email,
+      name: "",
+      surname: "",
+      email: "",
       newPassword: "",
       currentPassword: "",
       msg: "",
+      reservationList: "",
+      dataReady: false,
     };
 
     this.changeState = this.changeState.bind(this);
@@ -27,6 +28,29 @@ class Profilo extends Component {
   textStyle = {
     fontSize: 20,
   };
+
+  async componentDidMount() {
+    try {
+      //get user data
+      const userData = jsonwebtoken.decode(localStorage.usertoken);
+      this.setState({ name: userData.nome });
+      this.setState({ surname: userData.cognome });
+      this.setState({ email: userData.email });
+
+      //get user reservations
+      getUserReservation(userData.email)
+        .then((res) => {
+          this.setState({ reservationList: res });
+          this.setState({ dataReady: true });
+          //console.log(this.state.reservationList);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   checkLogin() {
     if (localStorage.loginDone) {
