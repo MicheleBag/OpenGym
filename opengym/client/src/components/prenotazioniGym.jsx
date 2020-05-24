@@ -58,6 +58,7 @@ class PrenotazioniGym extends Component {
   //made to use reservation list in a more usable data struct
   fetchData = () => {
     var data = [];
+    //const nDays = Object.keys(this.state.reservationList).length;
     for (let k = 0; k < 6; k++) {
       data.push(this.state.reservationList["day" + k]);
     }

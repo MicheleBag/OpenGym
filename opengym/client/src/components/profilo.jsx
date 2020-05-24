@@ -3,7 +3,7 @@ import jsonwebtoken from "jsonwebtoken";
 import { edit } from "./userFunctions";
 import AnimatedText from "./animatedText";
 import { Spring, animated, config } from "react-spring/renderprops";
-import { getUserReservation } from "./userFunctions";
+import { getUserReservation, deleteReservetion } from "./userFunctions";
 
 class Profilo extends Component {
   constructor(props) {
@@ -63,6 +63,16 @@ class Profilo extends Component {
     this.setState({ editMode: !this.state.editMode });
   }
 
+  //made to use reservation list in a more usable data struct
+  fetchData = () => {
+    var data = [];
+    const nReservation = this.state.reservationList.length;
+    for (let k = 0; k < nReservation; k++) {
+      data.push(this.state.reservationList[k]);
+    }
+    return data;
+  };
+
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
@@ -86,9 +96,24 @@ class Profilo extends Component {
     });
   }
 
+  handleDelete(data, gymId, event) {
+    event.preventDefault();
+
+    const reserveData = {
+      email: this.state.email,
+      date: data,
+      gymId: gymId,
+    };
+
+    deleteReservetion(reserveData).then((res) => {
+      if (res) window.location.reload();
+      else console.log(res);
+    });
+  }
+
   render() {
     const dataCard = (
-      <div className="card w-25 m-4">
+      <div className="card m-4">
         <h5 className="card-header">I tuoi dati</h5>
         <div className="card-body">
           <ul className="list-group list-group-flush">
@@ -114,7 +139,7 @@ class Profilo extends Component {
     );
 
     const editCard = (
-      <div className="card w-25 m-4">
+      <div className="card m-4">
         <h5 className="card-header">Modifica i tuoi dati</h5>
         <div className="card-body p-2">
           <form>
@@ -216,24 +241,87 @@ class Profilo extends Component {
       </div>
     );
 
+    const listItem = () => {
+      var item = [];
+      var data = this.fetchData();
+      const nReservation = Object.keys(data).length;
+      const tdClass = "align-middle py-1";
+      item.push(
+        <tr className="">
+          <th>#</th>
+          <th>Data</th>
+          <th>Palestra</th>
+          <th>Orario inizio</th>
+          <th>Orario fine</th>
+        </tr>
+      );
+      for (let k = 0; k < nReservation; k++) {
+        //console.log(data[k]);
+        item.push(
+          <tr>
+            <td className={tdClass}>
+              <b>{k + 1}</b>
+            </td>
+            <td className={tdClass}>{data[k].data} </td>
+            <td className={tdClass}>{data[k].nome}</td>
+            <td className={tdClass}>{data[k].orario_inizio}</td>
+            <td className={tdClass}>{data[k].orario_fine}</td>
+            <td className={tdClass}>
+              <a
+                className={"btn px-2 btn-danger text-white"}
+                onClick={(e) =>
+                  this.handleDelete(data[k].data, data[k].id_palestra, e)
+                }
+              >
+                Elimina
+              </a>
+            </td>
+          </tr>
+        );
+      }
+      return item;
+    };
+
+    const list = (
+      <div className="card m-4">
+        <h5 className="card-header">Le tue prenotazioni</h5>
+        <div className="card-body">
+          <table className="table table-bordered">{listItem()}</table>
+        </div>
+      </div>
+    );
+    //<ul className="list-group list-group-flush">{listItem()}</ul>
+
     return (
       <React.Fragment>
         {this.checkLogin()}
         <h1 className="text-white">
           <AnimatedText text={"Bentornato " + this.state.name} point="!" />
         </h1>
-        <Spring
-          from={{ opacity: 0, marginLeft: -300 }}
-          to={{ opacity: 1, marginLeft: 0 }}
-          config={config.default}
-        >
-          {(props) => (
-            <animated.div style={props}>
-              {this.state.editMode ? editCard : dataCard}
-            </animated.div>
-          )}
-        </Spring>
-        );
+        <div className="row w-100">
+          <Spring
+            from={{ opacity: 0, marginLeft: -300 }}
+            to={{ opacity: 1, marginLeft: 0 }}
+            config={config.default}
+          >
+            {(props) => (
+              <animated.div style={props} className="mx-5">
+                {this.state.editMode ? editCard : dataCard}
+              </animated.div>
+            )}
+          </Spring>
+          <Spring
+            from={{ opacity: 0 }}
+            to={{ opacity: 1 }}
+            config={config.default}
+          >
+            {(props) => (
+              <animated.div style={props} className="ml-5">
+                {list}
+              </animated.div>
+            )}
+          </Spring>
+        </div>
       </React.Fragment>
     );
   }

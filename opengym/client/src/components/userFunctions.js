@@ -75,7 +75,7 @@ export const getUserReservation = (email) => {
       },
     })
     .then((response) => {
-      console.log(response.data);
+      //console.log(response.data);
       return response.data;
     })
     .catch((err) => {
@@ -86,11 +86,11 @@ export const getUserReservation = (email) => {
 export const edit = (data) => {
   return axios
     .put("/account", {
-      name: data.name,
-      surname: data.surname,
+      first_name: data.name,
+      last_name: data.surname,
       email: data.email,
-      newPassword: data.newPassword,
-      currentPassword: data.currentPassword,
+      new_password: data.newPassword,
+      current_password: data.currentPassword,
     })
     .then((response) => {
       console.log(response);
@@ -102,7 +102,7 @@ export const edit = (data) => {
 };
 
 export const reserve = (reserveData) => {
-  console.log(reserveData.data);
+  //console.log(reserveData.data);
   return axios
     .post("/reservation", {
       id_palestra: reserveData.id,
@@ -110,6 +110,25 @@ export const reserve = (reserveData) => {
       data: reserveData.data,
       orario_inizio: reserveData.timeStart,
       orario_fine: reserveData.timeEnd,
+    })
+    .then((response) => {
+      console.log(response);
+      return response.data.done;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const deleteReservetion = (reserveData) => {
+  console.log(reserveData);
+  return axios
+    .delete("/reservation", {
+      params: {
+        id_palestra: reserveData.gymId,
+        email: reserveData.email,
+        data: reserveData.date,
+      },
     })
     .then((response) => {
       console.log(response);
