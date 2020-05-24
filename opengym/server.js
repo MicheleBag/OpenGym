@@ -236,6 +236,7 @@ app.get("/userReservationInfo", (req, res) => {
     "SELECT  id_palestra,nome,data,orario_inizio,orario_fine FROM prenotazione INNER JOIN palestra USING(id_palestra) WHERE prenotazione.email = ? AND prenotazione.data >= ?",[req.query.email,today_date],
     (err, results) => {
       if(!err){
+        console.log()
         reservations_raw = JSON.parse(JSON.stringify(results));
         for(i=0; i<reservations_raw.length; i++){
           reservation_date = new Date (reservations_raw[i].data);
@@ -261,14 +262,22 @@ app.post("/adminLogin", (req, res) => {
   let password = req.body.password;
   if (email && password) {
     mysqlConnection.query(
-      "SELECT * FROM gym_administrator WHERE email = ? AND password = ?",
+      "SELECT * FROM gym_administrator INNER JOIN palestra USING(id_palestra) WHERE email = ? AND password = ?",
       [email, password],
       (err, results, fields) => {
         if (results.length > 0) {
+          console.log(results)
           const token = jwt.sign(
             {
               id_palestra: results[0].id_palestra,
-              email: results[0].email
+              name: results[0].nome,
+              address: results[0].indirizzo,
+              city: results[0].città,
+              immagine: results[0].immagine,
+              capacity: results[0].capacità,
+              open_time: results[0].orario_apertura,
+              closed_time: results[0].orario_chiusura,
+              active: results[0].active
             },
             "SEGRETO",
             { expiresIn: 120 }
@@ -283,7 +292,24 @@ app.post("/adminLogin", (req, res) => {
     res.json({done: false});
   }
 });
-
+app.get("/adminReservationInfo", (req, res) => {
+  id_palestra = req.query.id_palestra;
+  date = new Date();
+  date.setHours(0,0,0,0);
+  mysqlConnection.query(
+    "SELECT * FROM prenotazione WHERE data = ?",[date],
+    (err, results) => {
+      if(!err){
+        console.log(results)
+       // InsertTimeSlots(business_hours,time_slots);
+      }
+      else{
+        console.log(err)
+        res.json({done: false})
+      } 
+    }
+  );
+});
 app.put("/palestra", (req, res) => {
   inp = req.body;
   id_palestra = inp.id_palestra;
@@ -359,6 +385,7 @@ app.post("/palestra", (req, res) => {
 
 
 });
+
 function ChangeDateFormat(date){
   
   var year = date.getFullYear();
