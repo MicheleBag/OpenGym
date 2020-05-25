@@ -43,9 +43,8 @@ class Admin extends Component {
       //get daily reservations
       getAdminReservation(gymData.id_palestra)
         .then((res) => {
-          console.log("ciao");
-          //this.setState({ reservationList: res });
-          //this.setState({ dataReady: true });
+          this.setState({ reservationList: res });
+          this.setState({ dataReady: true });
           console.log(res);
         })
         .catch((err) => {
@@ -279,7 +278,7 @@ class Admin extends Component {
 
     const listItem = () => {
       var item = [];
-      var data = this.fetchData();
+      var data = []; //this.fetchData();
       const nReservation = Object.keys(data).length;
       const tdClass = "align-middle py-1";
       item.push(

@@ -103,6 +103,7 @@ class PrenotazioniGym extends Component {
       //controllo risposta
       if (res) {
         this.setState({ msg: "Prenotazione effettuata!" });
+        setTimeout(window.location.reload(), 2000);
         console.log(res);
       } else
         this.setState({ msg: "Hai già una prenotazione effettuata per oggi!" });
