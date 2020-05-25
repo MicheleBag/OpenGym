@@ -209,7 +209,6 @@ class Admin extends Component {
                 <input
                   type="file"
                   className="form-control"
-                  required="required"
                   name="image"
                   placeholder="Carica una foto"
                   onChange={this.handleChange}
