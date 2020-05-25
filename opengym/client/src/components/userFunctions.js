@@ -78,7 +78,7 @@ export const getGymReservation = (gymId) => {
 
 export const getUserReservation = (email) => {
   return axios
-    .get("/userReservationInfo", {nnnn
+    .get("/userReservationInfo", {
       params: {
         email: email,
       },
@@ -138,6 +138,7 @@ export const editGym = (data) => {
       capacity: data.capacity,
       open_time: data.open_time,
       closed_time: data.closed_time,
+      day_closed: data.day_closed,
     })
     .then((response) => {
       console.log(response);

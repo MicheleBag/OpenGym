@@ -19,11 +19,21 @@ class Admin extends Component {
       msg: "",
       reservationList: "",
       dataReady: false,
+      dayClosed: [
+        { id: 0, value: "Domenica", isChecked: false },
+        { id: 1, value: "Lunedì", isChecked: false },
+        { id: 2, value: "Martedì", isChecked: false },
+        { id: 3, value: "Mercoledì", isChecked: false },
+        { id: 4, value: "Giovedì", isChecked: false },
+        { id: 5, value: "Venerdì", isChecked: false },
+        { id: 6, value: "Sabato", isChecked: false },
+      ],
     };
 
     this.changeState = this.changeState.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleCheckChieldElement = this.handleCheckChieldElement.bind(this);
   }
 
   async componentDidMount() {
@@ -85,8 +95,10 @@ class Admin extends Component {
       capacity: this.state.capacity,
       open_time: this.state.opening,
       closed_time: this.state.closing,
+      day_closed: this.state.dayClosed,
     };
 
+    console.log(this.state.dayClosed);
     editGym(data).then((res) => {
       if (res) {
         this.setState({ msg: "Modifiche effettuate" });
@@ -94,7 +106,15 @@ class Admin extends Component {
       } else this.setState({ msg: "Errore: Password errata" });
     });
   }
-  toggleOpen = () => this.setState({ isOpen: !this.state.isOpen });
+  handleCheckChieldElement = (event) => {
+    let dayClosed = this.state.dayClosed;
+    dayClosed.forEach((day) => {
+      console.log(day);
+      if (day.value === event.target.value)
+        day.isChecked = event.target.checked;
+    });
+    this.setState({ dayClosed: dayClosed });
+  };
 
   //made to use reservation list in a more usable data struct
   fetchData = () => {
@@ -152,6 +172,22 @@ class Admin extends Component {
         </div>
       </div>
     );
+
+    const days = this.state.dayClosed.map((day) => {
+      return (
+        <React.Fragment>
+          <input
+            key={day.id}
+            onChange={this.handleCheckChieldElement}
+            type="checkbox"
+            checked={day.isChecked}
+            value={day.value}
+          />
+          <label>{day.value}</label>
+          <br />
+        </React.Fragment>
+      );
+    });
 
     const editCard = (
       <div className="card m-4 ml-5 col-sm-4">
@@ -256,6 +292,14 @@ class Admin extends Component {
                   onChange={this.handleChange}
                 />
               </div>
+              <div className="form-group">
+                <label style={this.textStyle} className="">
+                  Giorni festivi
+                </label>
+                <br />
+                <div class="form-check px-0">{days}</div>
+              </div>
+
               <div className="form-group form-inline">
                 <button
                   onClick={this.changeState}
