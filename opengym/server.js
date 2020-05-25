@@ -226,32 +226,40 @@ app.put("/account", (req, res) => {
   }
 });
 
-app.get("/userReservationInfo", (req, res) => {
-  inp = req.query;
-  email = inp.email;
-  today_date = new Date();
-  today_date.setHours(0,0,0,0);
-  console.log(email)
+app.get("/adminReservationInfo", (req, res) => {
+ let id_palestra = req.query.id;
+  date = new Date();
+  date.setHours(0,0,0,0);
+  query_data = [];
+  time_slots = [];
+  res_data = [];
+  console.log(id_palestra);
   mysqlConnection.query(
-    "SELECT  id_palestra,nome,data,orario_inizio,orario_fine FROM prenotazione INNER JOIN palestra USING(id_palestra) WHERE prenotazione.email = ? AND prenotazione.data >= ?",[req.query.email,today_date],
+    "SELECT orario_inizio,orario_fine,orario_apertura,orario_chiusura,email,utente.nome,cognome FROM prenotazione INNER JOIN palestra USING(id_palestra) INNER JOIN utente using(email) WHERE data = ? AND id_palestra = ?",[date,id_palestra],
     (err, results) => {
       if(!err){
-        console.log()
-        reservations_raw = JSON.parse(JSON.stringify(results));
-        for(i=0; i<reservations_raw.length; i++){
-          reservation_date = new Date (reservations_raw[i].data);
-          reservation_start_time = ChangeTimeFormat(reservations_raw[i].orario_inizio);
-          reservation_finish_time = ChangeTimeFormat(reservations_raw[i].orario_fine);
-          reservations_raw[i].data = ChangeDateFormat(reservation_date);
-          reservations_raw[i].orario_inizio = reservation_start_time;
-          reservations_raw[i].orario_fine = reservation_finish_time;
+        query_data = JSON.parse(JSON.stringify(results));
+        if(query_data.length>0){
+        InsertTimeSlots(query_data, time_slots);      
+        data_string = JSON.stringify(query_data);
+        for(var k = 0; k < time_slots.length; k++) {
+          res_data.push({start_session: ChangeTimeFormat(time_slots[k].start_session), finish_session: ChangeTimeFormat(time_slots[k].finish_session)})
+          res_data[k]["users"] = [];         
+            for(i=0; i<query_data.length; i++){
+              if(query_data[i].orario_inizio == time_slots[k].start_session && query_data[i].orario_fine == time_slots[k].finish_session){
+                res_data[k]["users"].push({nome: query_data[i].nome+" "+query_data[i].cognome});
+               }
+            }             
         }
-        console.log(reservations_raw)
-        res.json(reservations_raw)
+        res.json(res_data);
+        }
+        else{
+          res.json({empty: true});
+        }
+       
       }
       else{
-        console.log(err)
-        res.json({done: false})
+        res.json({done: false});
       } 
     }
   );
@@ -294,40 +302,52 @@ app.post("/adminLogin", (req, res) => {
 });
 app.get("/adminReservationInfo", (req, res) => {
   id_palestra = req.query.id_palestra;
-  date = new Date();
+  date = new Date("2020-05-24");
   date.setHours(0,0,0,0);
   query_data = [];
   time_slots = [];
   res_data = [];
+  console.log(req.query);
   mysqlConnection.query(
-    "SELECT orario_inizio,orario_fine,orario_apertura,orario_chiusura,email,utente.nome,cognome FROM prenotazione INNER JOIN palestra USING(id_palestra) INNER JOIN utente using(email) WHERE data = ? AND id_palestra",[date,id_palestra],
+    "SELECT orario_apertura,orario_chiusura FROM palestra WHERE id_palestra = ?",9,
     (err, results) => {
-      if(!err){
+      console.log(err)
+  /*    if(!err){
+        
+        console.log(results)
         query_data = JSON.parse(JSON.stringify(results));
-        if(query_data.length>0){
-        InsertTimeSlots(query_data, time_slots);      
-        data_string = JSON.stringify(query_data);
-        for(var k = 0; k < time_slots.length; k++) {
-          res_data.push({start_session: ChangeTimeFormat(time_slots[k].start_session), finish_session: ChangeTimeFormat(time_slots[k].finish_session)})
-          res_data[k]["users"] = [];         
-            for(i=0; i<query_data.length; i++){
-              if(query_data[i].orario_inizio == time_slots[k].start_session && query_data[i].orario_fine == time_slots[k].finish_session){
-                res_data[k]["users"].push({nome: query_data[i].nome+" "+query_data[i].cognome});
-               }
-            }             
-        }
-        res.json(res_data);
-        }
-        else{
-          res.json({empty: true});
-        }
+
        
+        InsertTimeSlots(query_data, time_slots);
+        console.log("dd")
+        mysqlConnection.query(
+          "SELECT nome,cognome,orario_inizio,orario_fine FROM prenotazione INNER JOIN utente USING(email) WHERE id_palestra ? AND data = ?",[id_palestra,date],
+        (err, results) => {
+          if(!err){
+            infos = JSON.parse(JSON.stringify(results))
+            for(var k = 0; k < time_slots.length; k++) {
+            res_data.push({start_session: ChangeTimeFormat(time_slots[k].start_session), finish_session: ChangeTimeFormat(time_slots[k].finish_session)})
+            res_data[k]["users"] = [];         
+              for(i=0; i<infos.length; i++){
+                if(infos[i].orario_inizio == time_slots[k].start_session && infos[i].orario_fine == time_slots[k].finish_session){
+                  res_data[k]["users"].push({nome: infos[i].nome+" "+infos[i].cognome});
+                }
+              }             
+            }
+          res.json(res_data);;      
+          }
+          else{
+            console.log(err)
+          }
+       });
+      
       }
+
       else{
-        res.json({done: false});
-      } 
-    }
-  );
+        res.json(err)
+      }
+    */
+    });
 });
 app.put("/palestra", (req, res) => {
   inp = req.body;
