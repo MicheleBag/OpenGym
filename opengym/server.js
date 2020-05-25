@@ -303,15 +303,23 @@ app.get("/adminReservationInfo", (req, res) => {
     (err, results) => {
       if(!err){
         query_data = JSON.parse(JSON.stringify(results));
+        if(query_data.length>0){
+
         InsertTimeSlots(query_data, time_slots);      
         data_string = JSON.stringify(query_data);
         for(var k = 0; k < time_slots.length; k++) {
           time_slots[k]["users"] = [];
-          for(i=0; i<query_data.length; i++){
-            if(query_data[i].orario_inizio == time_slots[k].start_session && query_data[i].orario_fine == time_slots[k].finish_session){
-              time_slots[k]["users"].push({nome: query_data[i].nome+" "+query_data[i].cognome});
-            }
-          }
+          
+            for(i=0; i<query_data.length; i++){
+              if(query_data[i].orario_inizio == time_slots[k].start_session && query_data[i].orario_fine == time_slots[k].finish_session){
+                time_slots[k]["users"].push({nome: query_data[i].nome+" "+query_data[i].cognome});
+               }
+            }     
+          
+        }
+        }
+        else{
+          res.json({empty: true});
         }
         res.json(time_slots);
       }
