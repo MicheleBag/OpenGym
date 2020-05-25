@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import jsonwebtoken from "jsonwebtoken";
 import { Spring, animated, config } from "react-spring/renderprops";
 import { editGym, getAdminReservation } from "./userFunctions";
-
+import AnimatedText from "./animatedText";
 class Admin extends Component {
   constructor(props) {
     super(props);
@@ -30,7 +30,7 @@ class Admin extends Component {
     try {
       //get gym data
       const gymData = jsonwebtoken.decode(localStorage.admintoken);
-      //console.log(gymData);
+      console.log(gymData);
       this.setState({ id: gymData.id_palestra });
       this.setState({ name: gymData.name });
       this.setState({ address: gymData.address });
@@ -45,7 +45,6 @@ class Admin extends Component {
         .then((res) => {
           this.setState({ reservationList: res });
           this.setState({ dataReady: true });
-          console.log(res);
         })
         .catch((err) => {
           console.log(err);
@@ -94,6 +93,7 @@ class Admin extends Component {
       else this.setState({ msg: "Errore: Password errata" });
     });
   }
+  toggleOpen = () => this.setState({ isOpen: !this.state.isOpen });
 
   //made to use reservation list in a more usable data struct
   fetchData = () => {
@@ -278,30 +278,30 @@ class Admin extends Component {
 
     const listItem = () => {
       var item = [];
-      var data = []; //this.fetchData();
+      var data = this.fetchData();
       const nReservation = Object.keys(data).length;
       const tdClass = "align-middle py-1";
       item.push(
         <tr className="">
-          <th>#</th>
           <th>Orario</th>
-          <th>Nome</th>
-          <th>Cognome</th>
+          <th>Utente</th>
         </tr>
       );
       for (let k = 0; k < nReservation; k++) {
-        //console.log(data[k]);
+        var users = [];
+        for (let j = 0; j < data[k].users.length; j++) {
+          users.push(<p>{data[k].users[j].nome}</p>);
+        }
         item.push(
-          <tr>
+          <React.Fragment>
+            <tr />
             <td className={tdClass}>
-              <b>{k + 1}</b>
+              <b>
+                {data[k].start_session}-{data[k].finish_session}{" "}
+              </b>
             </td>
-            <td className={tdClass}>
-              {data[k].orario_inizio}-{data[k].orario_fine}{" "}
-            </td>
-            <td className={tdClass}>{data[k].nome}</td>
-            <td className={tdClass}>{data[k].cognome}</td>
-          </tr>
+            <td className={tdClass}>{users}</td>
+          </React.Fragment>
         );
       }
       return item;
@@ -309,7 +309,7 @@ class Admin extends Component {
 
     const list = (
       <div className="card m-4">
-        <h5 className="card-header">Le tue prenotazioni</h5>
+        <h5 className="card-header">Prenotazioni giornaliere</h5>
         <div className="card-body">
           <table className="table table-bordered">{listItem()}</table>
         </div>
@@ -326,13 +326,12 @@ class Admin extends Component {
           <React.Fragment>
             {this.checkLogin()}
             <animated.div style={props}>
-              <h1>Pannello di controllo</h1>
+              <h1 className="text-white">
+                <AnimatedText text="Pannello di controllo" point="" />
+              </h1>
               {this.state.editMode ? editCard : dataCard}
             </animated.div>
-            <animated.div style={props}>
-              <h1>Prenotazioni giornaliere</h1>
-              {list}
-            </animated.div>
+            <animated.div style={props}>{list}</animated.div>
           </React.Fragment>
         )}
       </Spring>
