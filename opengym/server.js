@@ -294,7 +294,7 @@ app.post("/adminLogin", (req, res) => {
 });
 app.get("/adminReservationInfo", (req, res) => {
   id_palestra = req.query.id_palestra;
-  date = new Date();
+  date = new Date("2020-05-24");
   date.setHours(0,0,0,0);
   query_data = [];
   time_slots = [];
@@ -317,11 +317,12 @@ app.get("/adminReservationInfo", (req, res) => {
             }     
           
         }
+        res.json(time_slots)
         }
         else{
           res.json({empty: true});
         }
-        res.json(time_slots);
+       
       }
       else{
         res.json({done: false});
