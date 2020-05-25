@@ -107,7 +107,7 @@ class Admin extends Component {
 
   render() {
     const dataCard = (
-      <div className="card m-4">
+      <div className="card m-4 ml-5 col-sm-4">
         <h5 className="card-header">Dati palestra</h5>
         <div className="card-body">
           <ul className="list-group list-group-flush">
@@ -153,7 +153,7 @@ class Admin extends Component {
     );
 
     const editCard = (
-      <div className="card m-4">
+      <div className="card m-4 ml-5 col-sm-4">
         <h5 className="card-header">Modifica i dati</h5>
         <div className="card-body p-2">
           <form>
@@ -290,7 +290,7 @@ class Admin extends Component {
       for (let k = 0; k < nReservation; k++) {
         var users = [];
         for (let j = 0; j < data[k].users.length; j++) {
-          users.push(<p>{data[k].users[j].nome}</p>);
+          users.push(<p className="my-1">{data[k].users[j].nome}</p>);
         }
         item.push(
           <React.Fragment>
@@ -308,7 +308,7 @@ class Admin extends Component {
     };
 
     const list = (
-      <div className="card m-4">
+      <div className="card m-4 col-sm-6">
         <h5 className="card-header">Prenotazioni giornaliere</h5>
         <div className="card-body">
           <table className="table table-bordered">{listItem()}</table>
@@ -323,15 +323,15 @@ class Admin extends Component {
         config={config.molasses}
       >
         {(props) => (
-          <React.Fragment>
+          <React.Fragment style={props}>
             {this.checkLogin()}
-            <animated.div style={props}>
-              <h1 className="text-white">
-                <AnimatedText text="Pannello di controllo" point="" />
-              </h1>
+            <h1 className="text-white">
+              <AnimatedText text="Pannello di controllo" point="" />
+            </h1>
+            <div className="row w-100">
               {this.state.editMode ? editCard : dataCard}
-            </animated.div>
-            <animated.div style={props}>{list}</animated.div>
+              {list}
+            </div>
           </React.Fragment>
         )}
       </Spring>

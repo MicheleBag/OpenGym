@@ -305,7 +305,7 @@ class Profilo extends Component {
             config={config.default}
           >
             {(props) => (
-              <animated.div style={props} className="mx-5">
+              <animated.div style={props} className="mx-5 col-sm-4">
                 {this.state.editMode ? editCard : dataCard}
               </animated.div>
             )}
@@ -316,7 +316,7 @@ class Profilo extends Component {
             config={config.default}
           >
             {(props) => (
-              <animated.div style={props} className="ml-5">
+              <animated.div style={props} className="ml-5 col-sm-6">
                 {list}
               </animated.div>
             )}
