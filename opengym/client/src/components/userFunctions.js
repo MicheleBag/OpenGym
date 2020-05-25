@@ -1,4 +1,8 @@
 import axios from "axios";
+
+/*
+/This file contains every api call that user can do
+*/
 export const register = (newUser) => {
   return axios
     .post("/account", {
@@ -134,6 +138,7 @@ export const editGym = (data) => {
       capacity: data.capacity,
       open_time: data.open_time,
       closed_time: data.closed_time,
+      day_closed: data.day_closed,
     })
     .then((response) => {
       console.log(response);

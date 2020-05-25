@@ -19,18 +19,28 @@ class Admin extends Component {
       msg: "",
       reservationList: "",
       dataReady: false,
+      dayClosed: [
+        { id: 0, value: "Domenica", isChecked: false },
+        { id: 1, value: "Lunedì", isChecked: false },
+        { id: 2, value: "Martedì", isChecked: false },
+        { id: 3, value: "Mercoledì", isChecked: false },
+        { id: 4, value: "Giovedì", isChecked: false },
+        { id: 5, value: "Venerdì", isChecked: false },
+        { id: 6, value: "Sabato", isChecked: false },
+      ],
     };
 
     this.changeState = this.changeState.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleCheckChieldElement = this.handleCheckChieldElement.bind(this);
   }
 
   async componentDidMount() {
     try {
-      //get gym data
+      //get gym data from token
       const gymData = jsonwebtoken.decode(localStorage.admintoken);
-      console.log(gymData);
+      //console.log(gymData);
       this.setState({ id: gymData.id_palestra });
       this.setState({ name: gymData.name });
       this.setState({ address: gymData.address });
@@ -40,7 +50,7 @@ class Admin extends Component {
       this.setState({ opening: gymData.open_time });
       this.setState({ closing: gymData.closed_time });
 
-      //get daily reservations
+      //get daily reservations from api
       getAdminReservation(gymData.id_palestra)
         .then((res) => {
           this.setState({ reservationList: res });
@@ -69,10 +79,11 @@ class Admin extends Component {
     } else this.setState({ [event.target.name]: event.target.value });
   }
   handleSubmit(event) {
-    console.log(this.state.image);
+    //console.log(this.state.image);
+    //To cast img in data buffer from img path
     var formData = new FormData();
     formData.append("file", this.state.image);
-    console.log(formData.getAll("file"));
+    //console.log(formData.getAll("file"));
 
     event.preventDefault();
     const data = {
@@ -84,16 +95,26 @@ class Admin extends Component {
       capacity: this.state.capacity,
       open_time: this.state.opening,
       closed_time: this.state.closing,
+      day_closed: this.state.dayClosed,
     };
 
+    console.log(this.state.dayClosed);
     editGym(data).then((res) => {
-      //DA FARE IL CONTROLLO SU COSA RISPONDE IL SERVER
-      if (res) this.setState({ msg: "Modifiche effettuate" });
-      //after 1sec this.setState({editMode: false});
-      else this.setState({ msg: "Errore: Password errata" });
+      if (res) {
+        this.setState({ msg: "Modifiche effettuate" });
+        setTimeout(this.setState({ editMode: false }), 1000);
+      } else this.setState({ msg: "Errore: Password errata" });
     });
   }
-  toggleOpen = () => this.setState({ isOpen: !this.state.isOpen });
+  handleCheckChieldElement = (event) => {
+    let dayClosed = this.state.dayClosed;
+    dayClosed.forEach((day) => {
+      console.log(day);
+      if (day.value === event.target.value)
+        day.isChecked = event.target.checked;
+    });
+    this.setState({ dayClosed: dayClosed });
+  };
 
   //made to use reservation list in a more usable data struct
   fetchData = () => {
@@ -152,6 +173,22 @@ class Admin extends Component {
       </div>
     );
 
+    const days = this.state.dayClosed.map((day) => {
+      return (
+        <React.Fragment>
+          <input
+            key={day.id}
+            onChange={this.handleCheckChieldElement}
+            type="checkbox"
+            checked={day.isChecked}
+            value={day.value}
+          />
+          <label>{day.value}</label>
+          <br />
+        </React.Fragment>
+      );
+    });
+
     const editCard = (
       <div className="card m-4 ml-5 col-sm-4">
         <h5 className="card-header">Modifica i dati</h5>
@@ -209,7 +246,6 @@ class Admin extends Component {
                 <input
                   type="file"
                   className="form-control"
-                  required="required"
                   name="image"
                   placeholder="Carica una foto"
                   onChange={this.handleChange}
@@ -256,6 +292,14 @@ class Admin extends Component {
                   onChange={this.handleChange}
                 />
               </div>
+              <div className="form-group">
+                <label style={this.textStyle} className="">
+                  Giorni festivi
+                </label>
+                <br />
+                <div class="form-check px-0">{days}</div>
+              </div>
+
               <div className="form-group form-inline">
                 <button
                   onClick={this.changeState}
@@ -287,8 +331,10 @@ class Admin extends Component {
           <th>Utente</th>
         </tr>
       );
+      //iterate over hours
       for (let k = 0; k < nReservation; k++) {
         var users = [];
+        //iterate over users
         for (let j = 0; j < data[k].users.length; j++) {
           users.push(<p className="my-1">{data[k].users[j].nome}</p>);
         }
