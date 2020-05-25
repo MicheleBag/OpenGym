@@ -294,7 +294,7 @@ app.post("/adminLogin", (req, res) => {
 });
 app.get("/adminReservationInfo", (req, res) => {
   id_palestra = req.query.id_palestra;
-  date = new Date("2020-05-23");
+  date = new Date();
   date.setHours(0,0,0,0);
   query_data = [];
   time_slots = [];
