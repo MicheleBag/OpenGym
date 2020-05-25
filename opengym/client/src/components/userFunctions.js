@@ -88,6 +88,22 @@ export const getUserReservation = (email) => {
     });
 };
 
+export const getAdminReservation = (gymId) => {
+  return axios
+    .get("/adminReservationInfo", {
+      params: {
+        id_palestra: gymId,
+      },
+    })
+    .then((response) => {
+      console.log(response.data);
+      return response.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 export const edit = (data) => {
   return axios
     .put("/account", {
@@ -100,6 +116,28 @@ export const edit = (data) => {
     .then((response) => {
       console.log(response);
       return response.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const editGym = (data) => {
+  console.log(data);
+  return axios
+    .put("/palestra", {
+      id_palestra: data.id_palestra,
+      name: data.name,
+      address: data.address,
+      city: data.city,
+      immagine: data.immagine,
+      capacity: data.capacity,
+      open_time: data.open_time,
+      closed_time: data.closed_time,
+    })
+    .then((response) => {
+      console.log(response);
+      return response.data.done;
     })
     .catch((err) => {
       console.log(err);
