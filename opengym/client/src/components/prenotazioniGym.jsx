@@ -51,8 +51,10 @@ class PrenotazioniGym extends Component {
         this.setState({ id: "" });
       }
     } else if (this.props.match.params && localStorage.admintoken) {
+      //admin can't reserve so redirect him to home
       this.props.history.push("/");
     } else {
+      //guest have to login befor reserve
       this.props.history.push("/accedi");
     }
   }
@@ -100,7 +102,6 @@ class PrenotazioniGym extends Component {
     };
 
     reserve(reservationData).then((res) => {
-      //controllo risposta
       if (res) {
         this.setState({ msg: "Prenotazione effettuata!" });
         setTimeout(window.location.reload(), 2000);

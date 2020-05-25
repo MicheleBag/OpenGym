@@ -1,4 +1,8 @@
 import axios from "axios";
+
+/*
+/This file contains every api call that user can do
+*/
 export const register = (newUser) => {
   return axios
     .post("/account", {
@@ -74,7 +78,7 @@ export const getGymReservation = (gymId) => {
 
 export const getUserReservation = (email) => {
   return axios
-    .get("/userReservationInfo", {
+    .get("/userReservationInfo", {nnnn
       params: {
         email: email,
       },

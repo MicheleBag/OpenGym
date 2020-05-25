@@ -28,9 +28,9 @@ class Admin extends Component {
 
   async componentDidMount() {
     try {
-      //get gym data
+      //get gym data from token
       const gymData = jsonwebtoken.decode(localStorage.admintoken);
-      console.log(gymData);
+      //console.log(gymData);
       this.setState({ id: gymData.id_palestra });
       this.setState({ name: gymData.name });
       this.setState({ address: gymData.address });
@@ -40,7 +40,7 @@ class Admin extends Component {
       this.setState({ opening: gymData.open_time });
       this.setState({ closing: gymData.closed_time });
 
-      //get daily reservations
+      //get daily reservations from api
       getAdminReservation(gymData.id_palestra)
         .then((res) => {
           this.setState({ reservationList: res });
@@ -69,10 +69,11 @@ class Admin extends Component {
     } else this.setState({ [event.target.name]: event.target.value });
   }
   handleSubmit(event) {
-    console.log(this.state.image);
+    //console.log(this.state.image);
+    //To cast img in data buffer from img path
     var formData = new FormData();
     formData.append("file", this.state.image);
-    console.log(formData.getAll("file"));
+    //console.log(formData.getAll("file"));
 
     event.preventDefault();
     const data = {
@@ -87,10 +88,10 @@ class Admin extends Component {
     };
 
     editGym(data).then((res) => {
-      //DA FARE IL CONTROLLO SU COSA RISPONDE IL SERVER
-      if (res) this.setState({ msg: "Modifiche effettuate" });
-      //after 1sec this.setState({editMode: false});
-      else this.setState({ msg: "Errore: Password errata" });
+      if (res) {
+        this.setState({ msg: "Modifiche effettuate" });
+        setTimeout(this.setState({ editMode: false }), 1000);
+      } else this.setState({ msg: "Errore: Password errata" });
     });
   }
   toggleOpen = () => this.setState({ isOpen: !this.state.isOpen });
@@ -286,8 +287,10 @@ class Admin extends Component {
           <th>Utente</th>
         </tr>
       );
+      //iterate over hours
       for (let k = 0; k < nReservation; k++) {
         var users = [];
+        //iterate over users
         for (let j = 0; j < data[k].users.length; j++) {
           users.push(<p className="my-1">{data[k].users[j].nome}</p>);
         }

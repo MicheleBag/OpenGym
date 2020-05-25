@@ -7,7 +7,7 @@ class Risultati extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataReady: false,
+      dataReady: false, //async call so data may be not ready
       key: "",
       gymList: "",
     };
@@ -37,6 +37,7 @@ class Risultati extends Component {
     }
   }
 
+  //fetch data in a more usable struct
   fetchData() {
     var data = [];
     for (let k = 0; k < this.state.gymList.length; k++) {

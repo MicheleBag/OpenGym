@@ -32,7 +32,6 @@ class RegisterForm extends Component {
   }
 
   handleSubmit(event) {
-    //
     event.preventDefault();
 
     const newUser = {
@@ -43,7 +42,6 @@ class RegisterForm extends Component {
     };
 
     register(newUser).then((res) => {
-      //DA FARE IL CONTROLLO SU COSA RISPONDE IL SERVER
       if (res) this.setState({ msg: "Registrazione effettuata" });
       else this.setState({ msg: "Ops! Qualcosa è andato storto" });
     });

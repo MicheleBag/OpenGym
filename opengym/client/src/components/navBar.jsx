@@ -103,6 +103,7 @@ class NavBar extends Component {
       </ul>
     );
 
+    //Checks if admin/user or guest
     const accountCheck = () => {
       var links = [];
       if (this.state.loggedIn) {
@@ -136,7 +137,6 @@ class NavBar extends Component {
             <Route path="/risultati/:gymName" component={Risultati} />
             <Route path="/profilo" component={Profilo} />
             <Route path="/admin" component={Admin} />
-
             <Route path="/prenotazioni/:gymId" component={PrenotazioniGym} />
           </Switch>
         </React.Fragment>

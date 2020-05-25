@@ -3,6 +3,7 @@ import { login } from "./userFunctions";
 import { Spring, animated, config } from "react-spring/renderprops";
 
 class LoginForm extends Component {
+  //style to set div at page's center
   formStyle = {
     position: "absolute",
     left: "50%",
