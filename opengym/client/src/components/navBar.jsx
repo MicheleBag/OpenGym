@@ -7,8 +7,6 @@ import Risultati from "./risultati";
 import Profilo from "./profilo";
 import Admin from "./admin";
 import PrenotazioniGym from "./prenotazioniGym";
-import { checkState } from "./userFunctions";
-import { Spring, animated } from "react-spring/renderprops";
 
 class NavBar extends Component {
   constructor(props) {

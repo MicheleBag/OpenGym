@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import jsonwebtoken from "jsonwebtoken";
-import { Spring, animated, config } from "react-spring/renderprops";
+import { Spring, config } from "react-spring/renderprops";
 import { editGym, getAdminReservation } from "./userFunctions";
 import AnimatedText from "./animatedText";
 class Admin extends Component {
@@ -108,7 +108,6 @@ class Admin extends Component {
   handleCheckChieldElement = (event) => {
     let dayClosed = this.state.dayClosed;
     dayClosed.forEach((day) => {
-      console.log(day);
       if (day.value === event.target.value)
         day.isChecked = event.target.checked;
     });
@@ -368,7 +367,7 @@ class Admin extends Component {
         config={config.molasses}
       >
         {(props) => (
-          <React.Fragment style={props}>
+          <div style={props}>
             {this.checkLogin()}
             <h1 className="text-white">
               <AnimatedText text="Pannello di controllo" point="" />
@@ -377,7 +376,7 @@ class Admin extends Component {
               {this.state.editMode ? editCard : dataCard}
               {list}
             </div>
-          </React.Fragment>
+          </div>
         )}
       </Spring>
     );

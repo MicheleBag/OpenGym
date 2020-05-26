@@ -243,21 +243,24 @@ class Profilo extends Component {
 
     const listItem = () => {
       var item = [];
+      var td = [];
       var data = this.fetchData();
       const nReservation = Object.keys(data).length;
       const tdClass = "align-middle py-1";
       item.push(
-        <tr className="">
-          <th>#</th>
-          <th>Data</th>
-          <th>Palestra</th>
-          <th>Orario inizio</th>
-          <th>Orario fine</th>
-        </tr>
+        <thead>
+          <tr className="">
+            <th>#</th>
+            <th>Data</th>
+            <th>Palestra</th>
+            <th>Orario inizio</th>
+            <th>Orario fine</th>
+          </tr>
+        </thead>
       );
       for (let k = 0; k < nReservation; k++) {
         //console.log(data[k]);
-        item.push(
+        td.push(
           <tr>
             <td className={tdClass}>
               <b>{k + 1}</b>
@@ -267,18 +270,19 @@ class Profilo extends Component {
             <td className={tdClass}>{data[k].orario_inizio}</td>
             <td className={tdClass}>{data[k].orario_fine}</td>
             <td className={tdClass}>
-              <a
+              <button
                 className={"btn px-2 btn-danger text-white"}
                 onClick={(e) =>
                   this.handleDelete(data[k].data, data[k].id_palestra, e)
                 }
               >
                 Elimina
-              </a>
+              </button>
             </td>
           </tr>
         );
       }
+      item.push(<tbody>{td}</tbody>);
       return item;
     };
 
