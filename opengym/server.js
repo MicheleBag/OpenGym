@@ -330,8 +330,13 @@ app.get("/adminReservationInfo", (req, res) => {
   );
 });
 app.put("/palestra", (req, res) => {
+  
   inp = req.body;
-  id_palestra = inp.id_palestra;
+  //id_palestra = inp.id_palestra;
+  id_palestra = inp.id_palestra
+  console.log(inp)
+  off = [];
+  insert_off = [];
   dati = {
     
     nome : inp.name,
@@ -343,8 +348,43 @@ app.put("/palestra", (req, res) => {
     orario_chiusura : inp.closed_time,
     active : true
   }
+  
   mysqlConnection.query("UPDATE palestra SET ? WHERE id_palestra = ?", [dati,inp.id_palestra], (err,result) => {
-    if (!err) res.json({done: true});
+    if (!err){
+      mysqlConnection.query("SELECT * FROM chiusura WHERE id_palestra = ?", id_palestra, (err,result) => {
+        if (!err){
+          days_off = JSON.parse(JSON.stringify(result));
+          for(u=0; u<days_off.length; u++){
+            off.push([id_palestra,days_off[u].days_off])
+          }
+          for(i=0; i<inp.day_closed.length; i++){
+            if(inp.day_closed[i].isChecked == true){
+              insert_off.push([id_palestra,inp.day_closed[i].id]); 
+            }  
+          }
+          console.log(insert_off)
+          mysqlConnection.query("DELETE FROM chiusura WHERE (id_palestra,days_off) IN (?)", [off], (err,result) => {
+             if(insert_off.length>0){ 
+              mysqlConnection.query("INSERT into chiusura (id_palestra, days_off) VALUES ?",[insert_off], (err,result) => {
+                if (!err){
+                  res.json({done: true})
+                }
+                else {
+                  console.log(err)
+                  res.json({done: false});
+                }
+              });
+             }
+             else{
+               res.json({done: true});
+             }
+          });
+        }
+        else {
+          res.json({done: false});
+        }
+      });
+    }
     else {
       console.log(result)
       console.log(err)
@@ -352,7 +392,7 @@ app.put("/palestra", (req, res) => {
     }
   });
 
-
+  
 });
 
 app.post("/palestra", (req, res) => {
@@ -404,6 +444,7 @@ app.post("/palestra", (req, res) => {
 
 
 });
+
 
 function ChangeDateFormat(date){
   
