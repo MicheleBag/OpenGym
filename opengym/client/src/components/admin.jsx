@@ -98,7 +98,6 @@ class Admin extends Component {
       day_closed: this.state.dayClosed,
     };
 
-    console.log(this.state.dayClosed);
     editGym(data).then((res) => {
       if (res) {
         this.setState({ msg: "Modifiche effettuate" });
