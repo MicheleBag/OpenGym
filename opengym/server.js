@@ -23,7 +23,7 @@ app.listen(5000, () => console.log("express server e runnato alla porta 5000"));
 app.get("/", function (req, res, next) {
   res.send("Server runnning on port 5000");
 });
-
+//CREAZIONE UTENTE NORMALE
 app.post("/account", (req, res) => {
   let inp = req.body;
   let utente = {
@@ -44,7 +44,7 @@ app.post("/account", (req, res) => {
     }
   });
 });
-
+//LOGIN UTENTE NORMALE
 app.post("/login", (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
@@ -73,7 +73,7 @@ app.post("/login", (req, res) => {
     res.json({done: false});
   }
 });
-
+//CREAZIONE DI UNA PRENOTAZIONE
 app.post("/reservation", (req, res) => {
   let inp, date, prenotazione;
   console.log(req.body);
@@ -97,7 +97,7 @@ app.post("/reservation", (req, res) => {
     }
   );
 });
-
+//RICERCA DI UNA PALESTRA
 app.get("/search", (req, res) => {
   let word = "'" + req.query.word + "?'";
   mysqlConnection.query(
@@ -115,7 +115,7 @@ app.get("/search", (req, res) => {
     }
   );
 });
-
+//RESTITUISCE GLI ORARI DISPONIBILE PER UNA PRENOTAZIONE DATO UN id_palestra
 app.get("/reservation", (req, res) => {
   let id_palestra = req.query.id_palestra;
   let business_hours;
@@ -171,7 +171,7 @@ app.get("/reservation", (req, res) => {
     }
   ); 
 });
-
+//ELIMINA UNA PRENOTAZIONE
 app.delete("/reservation", (req, res) => {
   inp = req.query;
   id_palestra = inp.id_palestra;
@@ -190,7 +190,7 @@ app.delete("/reservation", (req, res) => {
     }
   );
 });
-
+//MOPDIFICA GENRALITA' DI UN ACCOUNT
 app.put("/account", (req, res) => {
   inp = req.body;
   email = inp.email;
@@ -201,6 +201,7 @@ app.put("/account", (req, res) => {
  
   if (email && current_password) {
     mysqlConnection.query(
+      //VERIFICA CHE LA CURRENT PASSWORD SIA CORRETTA
       "SELECT * FROM utente WHERE email = ? AND password = ?",
       [email, current_password],
       (err, results) => {
@@ -225,7 +226,7 @@ app.put("/account", (req, res) => {
     res.json({done: false});
   }
 });
-
+//RESTITUISCE LE PRENOTAZIONI TUTTE LE PRENOTAZIONI DELL'UTENTE 
 app.get("/userReservationInfo", (req, res) => {
   inp = req.query;
   email = inp.email;
@@ -256,12 +257,13 @@ app.get("/userReservationInfo", (req, res) => {
     }
   );
 });
-
+//LOGIN DI ADMIN DI PALESTRA
 app.post("/adminLogin", (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
   if (email && password) {
     mysqlConnection.query(
+      //QUERY CHE CONFRONTA CHE LA PASSWORD SIA GIUSTA E RESTITUISCE ANCHE LE INFO RISPETTIVE DI UNA PALESTRA
       "SELECT * FROM gym_administrator INNER JOIN palestra USING(id_palestra) WHERE email = ? AND password = ?",
       [email, password],
       (err, results, fields) => {
@@ -292,6 +294,7 @@ app.post("/adminLogin", (req, res) => {
     res.json({done: false});
   }
 });
+//RESTITUISCE PRENOTAZIONI DI UNA DETERMINATA PALESTRA ALL?ADMIN DELLA PALESTRA
 app.get("/adminReservationInfo", (req, res) => {
   id_palestra = req.query.id_palestra;
   date = new Date();
@@ -329,10 +332,10 @@ app.get("/adminReservationInfo", (req, res) => {
     }
   );
 });
+//MODIFICA DATI RELATIVI AD UNA SPECIFICA PALESTRA 
 app.put("/palestra", (req, res) => {
   
   inp = req.body;
-  //id_palestra = inp.id_palestra;
   id_palestra = inp.id_palestra
   console.log(inp)
   off = [];
@@ -394,7 +397,7 @@ app.put("/palestra", (req, res) => {
 
   
 });
-
+//CREAZIONE DI UNA PALESTRA NUOVA RISERVATO AGLI SVILUPPATORI DELLA PIATTAFORMA PER AGGIUNGERE PALESTRE DEFAULT DA ASSEGNARE A NUOVI ADMIN DI PALESTRE
 app.post("/palestra", (req, res) => {
   inp = req.body;
   email = inp.email;
@@ -445,7 +448,7 @@ app.post("/palestra", (req, res) => {
 
 });
 
-
+//CAMBIO FORMAT DELLA DATA E LA RESTITUISCE COME DD/MM/YY
 function ChangeDateFormat(date){
   
   var year = date.getFullYear();
@@ -458,7 +461,7 @@ function ChangeDateFormat(date){
   
   return day + '-' + month + '-' + year;
 }
-
+//CAMBIA FORMAT DELLA DATA E LA RESTITUISCE COME YY/MM/DD 00:00:00
 function ChangeDateFormat2(row){
 
   row_data = row.split("-")
@@ -474,11 +477,12 @@ function ChangeDateFormat2(row){
   return year + '-' + month + '-' + day +" "+"00:00:00";
   
 }
+//CAMBIA FROMATO ORA DA HH:MM:SS ad HH:MM
 function ChangeTimeFormat(time){
   t = time.split(':')
   return t[0]+":"+t[1];
 }
-
+//CREAZIONE DELLE FASCE ORARIE DENTRO UN OGGETTO  DATO L'ORARIO DI PAERTURA E CHIUSURA DI UNA PALESTRA 
 function InsertTimeSlots(business_hours, time_slots){
   
   open_hours = business_hours[0].orario_apertura;
@@ -500,7 +504,7 @@ function InsertTimeSlots(business_hours, time_slots){
   }
   
 }
-
+//PER EVITARE PROBLEMI ASSEGNA ORARIO 00:00:00:00 ALLE DATE RICEVUTE IN INPUT E AGGIUNGE 7 GIORNI ALLA DATA 2
 function SetTime0toDates(date1,date2,date_tmp){
   date1.setHours(0,0,0,0);
   date2.setHours(0,0,0,0);
@@ -508,7 +512,7 @@ function SetTime0toDates(date1,date2,date_tmp){
   date_tmp.setHours(0,0,0,0);
 
 }
-
+// INSERISCE DENTRO days_data OGNI GIORNO SE ESISTE UNA SESSIONE RICEVUTA DAL DATABASE
 function daysDataInsert(reservation,days_data,date1){
   for(i=0; i<7; i++){
     d = "day"+i;
@@ -522,7 +526,7 @@ function daysDataInsert(reservation,days_data,date1){
     date1.setDate(date1.getDate()+1);
   }            
 }
-
+// INSERISCE DENTRO res_data OGNI GIORNO CON DENTRO LE SESSIONI E CONTA GLI UTENTI PER OGNI FASCIA ORARIA 
 function sessionInsert(time_slots,days_data,res_data,business_hours){
   count_users=[];
   for(l=0; l<7;l++){
@@ -539,7 +543,7 @@ function sessionInsert(time_slots,days_data,res_data,business_hours){
       }
     }
 }
-
+//INSERISCE LA DATA IN FOROMATO USER FRIENDLY DI OGNI GIORNO DENTRO res_data SPECIFICANDO SE LA PALESTRA ANCHE SE LA PALESTRA è CHIUSA
 function dateStatusInsert(date_tmp,days_off,res_data){
   for(m=0; m<7; m++){
     d = "day"+m;
