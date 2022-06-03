@@ -11,19 +11,23 @@ var corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.use(bodyparser.json());
-var mysqlConnection = mysql.createConnection({
+const db_config = {
 	host: process.env.DB_HOST,
 	user: process.env.DB_USER,
 	password: process.env.DB_PASSWORD,
 	database: process.env.DB_NAME,
 	port: process.env.DB_PORT,
-});
+};
+
+app.use(bodyparser.json());
+var mysqlConnection = mysql.createConnection(db_config);
 
 mysqlConnection.connect((err) => {
 	if (!err) console.log("db connesso");
-	else
+	else {
 		console.log("connessione db fallita :" + JSON.stringify(err, undefined, 2));
+		handleDisconnect();
+	}
 });
 
 const PORT = process.env.NODE_DOCKER_PORT || 8080;
@@ -651,4 +655,31 @@ function dateStatusInsert(date_tmp, days_off, res_data) {
 		}
 		date_tmp.setDate(date_tmp.getDate() + 1);
 	}
+}
+
+function handleDisconnect() {
+	// Recreate the connection, since the old one cannot be reused.
+	mysqlConnection = mysql.createConnection(db_config);
+
+	mysqlConnection.connect(function (err) {
+		if (err) {
+			console.log("error when connecting to db:", err);
+			// We introduce a delay before attempting to reconnect,
+			// to avoid a hot loop, and to allow our node script to
+			// process asynchronous requests in the meantime.
+			setTimeout(handleDisconnect, 5000);
+		} else console.log("db connected");
+	});
+
+	mysqlConnection.on("error", function (err) {
+		console.log("db error", err);
+		if (err.code === "PROTOCOL_CONNECTION_LOST") {
+			// Connection to the MySQL server is usually
+			// lost due to either server restart, or a
+			// connnection idle timeout
+			handleDisconnect();
+		} else {
+			throw err;
+		}
+	});
 }

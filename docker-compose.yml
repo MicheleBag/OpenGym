@@ -7,9 +7,9 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
       - MYSQL_DATABASE=$MYSQLDB_DATABASE
+      - MYSQL_TCP_PORT=$MYSQLDB_TCP_PORT
     ports:
       - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
-      #- 3306:3306
     volumes:
       - ./server:/docker-entrypoint-initdb.d
     networks:
